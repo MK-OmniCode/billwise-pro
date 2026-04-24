@@ -16,7 +16,9 @@ import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppPartiesRouteImport } from './routes/app.parties'
 import { Route as AppChallansIndexRouteImport } from './routes/app.challans.index'
+import { Route as AppBillsIndexRouteImport } from './routes/app.bills.index'
 import { Route as AppChallansIdRouteImport } from './routes/app.challans.$id'
+import { Route as AppBillsIdRouteImport } from './routes/app.bills.$id'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -53,9 +55,19 @@ const AppChallansIndexRoute = AppChallansIndexRouteImport.update({
   path: '/challans/',
   getParentRoute: () => AppRoute,
 } as any)
+const AppBillsIndexRoute = AppBillsIndexRouteImport.update({
+  id: '/bills/',
+  path: '/bills/',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppChallansIdRoute = AppChallansIdRouteImport.update({
   id: '/challans/$id',
   path: '/challans/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBillsIdRoute = AppBillsIdRouteImport.update({
+  id: '/bills/$id',
+  path: '/bills/$id',
   getParentRoute: () => AppRoute,
 } as any)
 
@@ -66,7 +78,9 @@ export interface FileRoutesByFullPath {
   '/app/parties': typeof AppPartiesRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/': typeof AppIndexRoute
+  '/app/bills/$id': typeof AppBillsIdRoute
   '/app/challans/$id': typeof AppChallansIdRoute
+  '/app/bills/': typeof AppBillsIndexRoute
   '/app/challans/': typeof AppChallansIndexRoute
 }
 export interface FileRoutesByTo {
@@ -75,7 +89,9 @@ export interface FileRoutesByTo {
   '/app/parties': typeof AppPartiesRoute
   '/app/settings': typeof AppSettingsRoute
   '/app': typeof AppIndexRoute
+  '/app/bills/$id': typeof AppBillsIdRoute
   '/app/challans/$id': typeof AppChallansIdRoute
+  '/app/bills': typeof AppBillsIndexRoute
   '/app/challans': typeof AppChallansIndexRoute
 }
 export interface FileRoutesById {
@@ -86,7 +102,9 @@ export interface FileRoutesById {
   '/app/parties': typeof AppPartiesRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/': typeof AppIndexRoute
+  '/app/bills/$id': typeof AppBillsIdRoute
   '/app/challans/$id': typeof AppChallansIdRoute
+  '/app/bills/': typeof AppBillsIndexRoute
   '/app/challans/': typeof AppChallansIndexRoute
 }
 export interface FileRouteTypes {
@@ -98,7 +116,9 @@ export interface FileRouteTypes {
     | '/app/parties'
     | '/app/settings'
     | '/app/'
+    | '/app/bills/$id'
     | '/app/challans/$id'
+    | '/app/bills/'
     | '/app/challans/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -107,7 +127,9 @@ export interface FileRouteTypes {
     | '/app/parties'
     | '/app/settings'
     | '/app'
+    | '/app/bills/$id'
     | '/app/challans/$id'
+    | '/app/bills'
     | '/app/challans'
   id:
     | '__root__'
@@ -117,7 +139,9 @@ export interface FileRouteTypes {
     | '/app/parties'
     | '/app/settings'
     | '/app/'
+    | '/app/bills/$id'
     | '/app/challans/$id'
+    | '/app/bills/'
     | '/app/challans/'
   fileRoutesById: FileRoutesById
 }
@@ -178,11 +202,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppChallansIndexRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/bills/': {
+      id: '/app/bills/'
+      path: '/bills'
+      fullPath: '/app/bills/'
+      preLoaderRoute: typeof AppBillsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/challans/$id': {
       id: '/app/challans/$id'
       path: '/challans/$id'
       fullPath: '/app/challans/$id'
       preLoaderRoute: typeof AppChallansIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/bills/$id': {
+      id: '/app/bills/$id'
+      path: '/bills/$id'
+      fullPath: '/app/bills/$id'
+      preLoaderRoute: typeof AppBillsIdRouteImport
       parentRoute: typeof AppRoute
     }
   }
@@ -192,7 +230,9 @@ interface AppRouteChildren {
   AppPartiesRoute: typeof AppPartiesRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppBillsIdRoute: typeof AppBillsIdRoute
   AppChallansIdRoute: typeof AppChallansIdRoute
+  AppBillsIndexRoute: typeof AppBillsIndexRoute
   AppChallansIndexRoute: typeof AppChallansIndexRoute
 }
 
@@ -200,7 +240,9 @@ const AppRouteChildren: AppRouteChildren = {
   AppPartiesRoute: AppPartiesRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
+  AppBillsIdRoute: AppBillsIdRoute,
   AppChallansIdRoute: AppChallansIdRoute,
+  AppBillsIndexRoute: AppBillsIndexRoute,
   AppChallansIndexRoute: AppChallansIndexRoute,
 }
 
@@ -214,3 +256,12 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { createStart } from '@tanstack/react-start'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+  }
+}
