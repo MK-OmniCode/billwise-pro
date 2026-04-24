@@ -9,38 +9,164 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppIndexRouteImport } from './routes/app.index'
+import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as AppPartiesRouteImport } from './routes/app.parties'
+import { Route as AppChallansIndexRouteImport } from './routes/app.challans.index'
+import { Route as AppBillsIndexRouteImport } from './routes/app.bills.index'
+import { Route as AppChallansIdRouteImport } from './routes/app.challans.$id'
+import { Route as AppBillsIdRouteImport } from './routes/app.bills.$id'
 
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AppRoute = AppRouteImport.update({
+  id: '/app',
+  path: '/app',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AppIndexRoute = AppIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppSettingsRoute = AppSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPartiesRoute = AppPartiesRouteImport.update({
+  id: '/parties',
+  path: '/parties',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppChallansIndexRoute = AppChallansIndexRouteImport.update({
+  id: '/challans/',
+  path: '/challans/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBillsIndexRoute = AppBillsIndexRouteImport.update({
+  id: '/bills/',
+  path: '/bills/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppChallansIdRoute = AppChallansIdRouteImport.update({
+  id: '/challans/$id',
+  path: '/challans/$id',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppBillsIdRoute = AppBillsIdRouteImport.update({
+  id: '/bills/$id',
+  path: '/bills/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/app/parties': typeof AppPartiesRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/': typeof AppIndexRoute
+  '/app/bills/$id': typeof AppBillsIdRoute
+  '/app/challans/$id': typeof AppChallansIdRoute
+  '/app/bills/': typeof AppBillsIndexRoute
+  '/app/challans/': typeof AppChallansIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/login': typeof LoginRoute
+  '/app/parties': typeof AppPartiesRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app': typeof AppIndexRoute
+  '/app/bills/$id': typeof AppBillsIdRoute
+  '/app/challans/$id': typeof AppChallansIdRoute
+  '/app/bills': typeof AppBillsIndexRoute
+  '/app/challans': typeof AppChallansIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/app': typeof AppRouteWithChildren
+  '/login': typeof LoginRoute
+  '/app/parties': typeof AppPartiesRoute
+  '/app/settings': typeof AppSettingsRoute
+  '/app/': typeof AppIndexRoute
+  '/app/bills/$id': typeof AppBillsIdRoute
+  '/app/challans/$id': typeof AppChallansIdRoute
+  '/app/bills/': typeof AppBillsIndexRoute
+  '/app/challans/': typeof AppChallansIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/app'
+    | '/login'
+    | '/app/parties'
+    | '/app/settings'
+    | '/app/'
+    | '/app/bills/$id'
+    | '/app/challans/$id'
+    | '/app/bills/'
+    | '/app/challans/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/login'
+    | '/app/parties'
+    | '/app/settings'
+    | '/app'
+    | '/app/bills/$id'
+    | '/app/challans/$id'
+    | '/app/bills'
+    | '/app/challans'
+  id:
+    | '__root__'
+    | '/'
+    | '/app'
+    | '/login'
+    | '/app/parties'
+    | '/app/settings'
+    | '/app/'
+    | '/app/bills/$id'
+    | '/app/challans/$id'
+    | '/app/bills/'
+    | '/app/challans/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AppRoute: typeof AppRouteWithChildren
+  LoginRoute: typeof LoginRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/app': {
+      id: '/app'
+      path: '/app'
+      fullPath: '/app'
+      preLoaderRoute: typeof AppRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +174,84 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/app/': {
+      id: '/app/'
+      path: '/'
+      fullPath: '/app/'
+      preLoaderRoute: typeof AppIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/settings': {
+      id: '/app/settings'
+      path: '/settings'
+      fullPath: '/app/settings'
+      preLoaderRoute: typeof AppSettingsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/parties': {
+      id: '/app/parties'
+      path: '/parties'
+      fullPath: '/app/parties'
+      preLoaderRoute: typeof AppPartiesRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/challans/': {
+      id: '/app/challans/'
+      path: '/challans'
+      fullPath: '/app/challans/'
+      preLoaderRoute: typeof AppChallansIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/bills/': {
+      id: '/app/bills/'
+      path: '/bills'
+      fullPath: '/app/bills/'
+      preLoaderRoute: typeof AppBillsIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/challans/$id': {
+      id: '/app/challans/$id'
+      path: '/challans/$id'
+      fullPath: '/app/challans/$id'
+      preLoaderRoute: typeof AppChallansIdRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/bills/$id': {
+      id: '/app/bills/$id'
+      path: '/bills/$id'
+      fullPath: '/app/bills/$id'
+      preLoaderRoute: typeof AppBillsIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
+interface AppRouteChildren {
+  AppPartiesRoute: typeof AppPartiesRoute
+  AppSettingsRoute: typeof AppSettingsRoute
+  AppIndexRoute: typeof AppIndexRoute
+  AppBillsIdRoute: typeof AppBillsIdRoute
+  AppChallansIdRoute: typeof AppChallansIdRoute
+  AppBillsIndexRoute: typeof AppBillsIndexRoute
+  AppChallansIndexRoute: typeof AppChallansIndexRoute
+}
+
+const AppRouteChildren: AppRouteChildren = {
+  AppPartiesRoute: AppPartiesRoute,
+  AppSettingsRoute: AppSettingsRoute,
+  AppIndexRoute: AppIndexRoute,
+  AppBillsIdRoute: AppBillsIdRoute,
+  AppChallansIdRoute: AppChallansIdRoute,
+  AppBillsIndexRoute: AppBillsIndexRoute,
+  AppChallansIndexRoute: AppChallansIndexRoute,
+}
+
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AppRoute: AppRouteWithChildren,
+  LoginRoute: LoginRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
