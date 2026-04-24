@@ -14,7 +14,262 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      bills: {
+        Row: {
+          bill_date: string
+          bill_no: string
+          cgst_amount: number
+          cgst_percent: number
+          challan_ids: Json
+          created_at: string
+          id: string
+          igst_amount: number
+          igst_percent: number
+          items: Json
+          notes: string | null
+          party_id: string | null
+          party_snapshot: Json
+          sgst_amount: number
+          sgst_percent: number
+          status: string
+          subtotal: number
+          total: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bill_date?: string
+          bill_no: string
+          cgst_amount?: number
+          cgst_percent?: number
+          challan_ids?: Json
+          created_at?: string
+          id?: string
+          igst_amount?: number
+          igst_percent?: number
+          items?: Json
+          notes?: string | null
+          party_id?: string | null
+          party_snapshot?: Json
+          sgst_amount?: number
+          sgst_percent?: number
+          status?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bill_date?: string
+          bill_no?: string
+          cgst_amount?: number
+          cgst_percent?: number
+          challan_ids?: Json
+          created_at?: string
+          id?: string
+          igst_amount?: number
+          igst_percent?: number
+          items?: Json
+          notes?: string | null
+          party_id?: string | null
+          party_snapshot?: Json
+          sgst_amount?: number
+          sgst_percent?: number
+          status?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bills_party_id_fkey"
+            columns: ["party_id"]
+            isOneToOne: false
+            referencedRelation: "parties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      challans: {
+        Row: {
+          billed: boolean
+          challan_date: string
+          challan_no: string
+          created_at: string
+          id: string
+          items: Json
+          party_id: string | null
+          party_snapshot: Json
+          remark: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          billed?: boolean
+          challan_date?: string
+          challan_no: string
+          created_at?: string
+          id?: string
+          items?: Json
+          party_id?: string | null
+          party_snapshot?: Json
+          remark?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          billed?: boolean
+          challan_date?: string
+          challan_no?: string
+          created_at?: string
+          id?: string
+          items?: Json
+          party_id?: string | null
+          party_snapshot?: Json
+          remark?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "challans_party_id_fkey"
+            columns: ["party_id"]
+            isOneToOne: false
+            referencedRelation: "parties"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      company_settings: {
+        Row: {
+          address: string | null
+          bill_prefix: string
+          cgst_percent: number
+          challan_prefix: string
+          company_name: string
+          created_at: string
+          email: string | null
+          gstin: string | null
+          id: string
+          igst_percent: number
+          phone: string | null
+          sgst_percent: number
+          signature_label: string | null
+          updated_at: string
+          use_igst: boolean
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          bill_prefix?: string
+          cgst_percent?: number
+          challan_prefix?: string
+          company_name?: string
+          created_at?: string
+          email?: string | null
+          gstin?: string | null
+          id?: string
+          igst_percent?: number
+          phone?: string | null
+          sgst_percent?: number
+          signature_label?: string | null
+          updated_at?: string
+          use_igst?: boolean
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          bill_prefix?: string
+          cgst_percent?: number
+          challan_prefix?: string
+          company_name?: string
+          created_at?: string
+          email?: string | null
+          gstin?: string | null
+          id?: string
+          igst_percent?: number
+          phone?: string | null
+          sgst_percent?: number
+          signature_label?: string | null
+          updated_at?: string
+          use_igst?: boolean
+          user_id?: string
+        }
+        Relationships: []
+      }
+      parties: {
+        Row: {
+          address: string | null
+          created_at: string
+          email: string | null
+          gstin: string | null
+          id: string
+          name: string
+          notes: string | null
+          phone: string | null
+          state: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          gstin?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          phone?: string | null
+          state?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          created_at?: string
+          email?: string | null
+          gstin?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          phone?: string | null
+          state?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
+      pricing_rules: {
+        Row: {
+          created_at: string
+          id: string
+          label: string | null
+          max_weight: number
+          min_weight: number
+          rate_per_kg: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          label?: string | null
+          max_weight: number
+          min_weight: number
+          rate_per_kg: number
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string | null
+          max_weight?: number
+          min_weight?: number
+          rate_per_kg?: number
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
