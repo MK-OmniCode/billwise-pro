@@ -15,6 +15,8 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
 import { Route as AppPartiesRouteImport } from './routes/app.parties'
+import { Route as AppChallansIndexRouteImport } from './routes/app.challans.index'
+import { Route as AppChallansIdRouteImport } from './routes/app.challans.$id'
 
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
@@ -46,6 +48,16 @@ const AppPartiesRoute = AppPartiesRouteImport.update({
   path: '/parties',
   getParentRoute: () => AppRoute,
 } as any)
+const AppChallansIndexRoute = AppChallansIndexRouteImport.update({
+  id: '/challans/',
+  path: '/challans/',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppChallansIdRoute = AppChallansIdRouteImport.update({
+  id: '/challans/$id',
+  path: '/challans/$id',
+  getParentRoute: () => AppRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +66,8 @@ export interface FileRoutesByFullPath {
   '/app/parties': typeof AppPartiesRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/': typeof AppIndexRoute
+  '/app/challans/$id': typeof AppChallansIdRoute
+  '/app/challans/': typeof AppChallansIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -61,6 +75,8 @@ export interface FileRoutesByTo {
   '/app/parties': typeof AppPartiesRoute
   '/app/settings': typeof AppSettingsRoute
   '/app': typeof AppIndexRoute
+  '/app/challans/$id': typeof AppChallansIdRoute
+  '/app/challans': typeof AppChallansIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -70,6 +86,8 @@ export interface FileRoutesById {
   '/app/parties': typeof AppPartiesRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/': typeof AppIndexRoute
+  '/app/challans/$id': typeof AppChallansIdRoute
+  '/app/challans/': typeof AppChallansIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -80,8 +98,17 @@ export interface FileRouteTypes {
     | '/app/parties'
     | '/app/settings'
     | '/app/'
+    | '/app/challans/$id'
+    | '/app/challans/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/app/parties' | '/app/settings' | '/app'
+  to:
+    | '/'
+    | '/login'
+    | '/app/parties'
+    | '/app/settings'
+    | '/app'
+    | '/app/challans/$id'
+    | '/app/challans'
   id:
     | '__root__'
     | '/'
@@ -90,6 +117,8 @@ export interface FileRouteTypes {
     | '/app/parties'
     | '/app/settings'
     | '/app/'
+    | '/app/challans/$id'
+    | '/app/challans/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -142,6 +171,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPartiesRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/challans/': {
+      id: '/app/challans/'
+      path: '/challans'
+      fullPath: '/app/challans/'
+      preLoaderRoute: typeof AppChallansIndexRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/app/challans/$id': {
+      id: '/app/challans/$id'
+      path: '/challans/$id'
+      fullPath: '/app/challans/$id'
+      preLoaderRoute: typeof AppChallansIdRouteImport
+      parentRoute: typeof AppRoute
+    }
   }
 }
 
@@ -149,12 +192,16 @@ interface AppRouteChildren {
   AppPartiesRoute: typeof AppPartiesRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
+  AppChallansIdRoute: typeof AppChallansIdRoute
+  AppChallansIndexRoute: typeof AppChallansIndexRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
   AppPartiesRoute: AppPartiesRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
+  AppChallansIdRoute: AppChallansIdRoute,
+  AppChallansIndexRoute: AppChallansIndexRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

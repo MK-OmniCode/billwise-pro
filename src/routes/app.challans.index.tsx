@@ -31,7 +31,7 @@ function ChallansList() {
 
   const load = async () => {
     const { data } = await supabase.from("challans").select("*").order("challan_date", { ascending: false });
-    setList((data ?? []) as Challan[]);
+    setList((data ?? []) as unknown as Challan[]);
   };
   useEffect(() => { if (user) load(); }, [user]);
 
