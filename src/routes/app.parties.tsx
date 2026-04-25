@@ -85,7 +85,7 @@ function PartiesPage() {
       <PageHeader
         title="Parties"
         subtitle="Customers & vendors"
-        actions={<Button onClick={openNew} className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" />Add Party</Button>}
+        actions={<Button onClick={openNew}><Plus className="h-4 w-4 mr-2" />Add Party</Button>}
       />
 
       <div className="relative mb-4 max-w-sm">
@@ -93,7 +93,7 @@ function PartiesPage() {
         <Input placeholder="Search parties…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-9" />
       </div>
 
-      <Card className="border-border/60">
+      <Card className="shadow-none">
         <CardContent className="p-0">
           <table className="w-full text-sm">
             <thead className="bg-muted/50 border-b border-border">
@@ -140,7 +140,7 @@ function PartiesPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setOpen(false)}>Cancel</Button>
-            <Button onClick={save} className="bg-primary hover:bg-primary/90">Save</Button>
+            <Button onClick={save}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

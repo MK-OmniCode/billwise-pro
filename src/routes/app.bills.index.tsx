@@ -70,13 +70,13 @@ function BillsList() {
       <PageHeader
         title="Bills"
         subtitle="Tax invoices"
-        actions={<Link to="/app/bills/$id" params={{ id: "new" }}><Button className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" />New Bill</Button></Link>}
+        actions={<Link to="/app/bills/$id" params={{ id: "new" }}><Button><Plus className="h-4 w-4 mr-2" />New Bill</Button></Link>}
       />
       <div className="relative mb-4 max-w-sm">
         <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input placeholder="Search bills…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-9" />
       </div>
-      <Card className="border-border/60">
+      <Card className="shadow-none">
         <CardContent className="p-0">
           <table className="w-full text-sm">
             <thead className="bg-muted/50 border-b border-border">
@@ -96,8 +96,8 @@ function BillsList() {
                   <td className="p-3 font-medium">{b.bill_no}</td>
                   <td className="p-3 text-muted-foreground">{b.bill_date}</td>
                   <td className="p-3">{b.party_snapshot?.name || "—"}</td>
-                  <td className="p-3 text-right font-bold text-primary">{fmtINR(Number(b.total))}</td>
-                  <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded-full ${b.status === "paid" ? "bg-success/15 text-success" : "bg-warning/20 text-warning-foreground"}`}>{b.status}</span></td>
+                  <td className="p-3 text-right font-semibold num">{fmtINR(Number(b.total))}</td>
+                  <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded border ${b.status === "paid" ? "border-foreground/30 bg-muted" : "border-warning/40 bg-warning/10"}`}>{b.status}</span></td>
                   <td className="p-3 text-right">
                     <Button size="icon" variant="ghost" onClick={() => downloadPdf(b)}><FileDown className="h-4 w-4" /></Button>
                     <Link to="/app/bills/$id" params={{ id: b.id }}><Button size="icon" variant="ghost"><Pencil className="h-4 w-4" /></Button></Link>

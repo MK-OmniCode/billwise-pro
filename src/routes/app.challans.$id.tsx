@@ -114,12 +114,12 @@ function ChallanForm() {
           <>
             <Button variant="outline" onClick={() => navigate({ to: "/app/challans" })}>Cancel</Button>
             <Button variant="outline" onClick={saveAndPdf}><FileDown className="h-4 w-4 mr-2" />Save & PDF</Button>
-            <Button onClick={save} disabled={busy} className="bg-primary hover:bg-primary/90"><Save className="h-4 w-4 mr-2" />Save</Button>
+            <Button onClick={save} disabled={busy}><Save className="h-4 w-4 mr-2" />Save</Button>
           </>
         }
       />
 
-      <Card className="mb-4 border-border/60">
+      <Card className="mb-4 shadow-none">
         <CardContent className="p-6 grid grid-cols-3 gap-4">
           <div><Label>Challan No</Label><Input value={challanNo} onChange={(e) => setChallanNo(e.target.value)} /></div>
           <div><Label>Date</Label><Input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></div>
@@ -135,7 +135,7 @@ function ChallanForm() {
         </CardContent>
       </Card>
 
-      <Card className="border-border/60">
+      <Card className="shadow-none">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold">Items</h3>

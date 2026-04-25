@@ -63,13 +63,13 @@ function ChallansList() {
       <PageHeader
         title="Challans"
         subtitle="Delivery challans"
-        actions={<Link to="/app/challans/$id" params={{ id: "new" }}><Button className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" />New Challan</Button></Link>}
+        actions={<Link to="/app/challans/$id" params={{ id: "new" }}><Button><Plus className="h-4 w-4 mr-2" />New Challan</Button></Link>}
       />
       <div className="relative mb-4 max-w-sm">
         <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input placeholder="Search by no. or party…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-9" />
       </div>
-      <Card className="border-border/60">
+      <Card className="shadow-none">
         <CardContent className="p-0">
           <table className="w-full text-sm">
             <thead className="bg-muted/50 border-b border-border">
@@ -90,7 +90,7 @@ function ChallansList() {
                   <td className="p-3 text-muted-foreground">{c.challan_date}</td>
                   <td className="p-3">{c.party_snapshot?.name || "—"}</td>
                   <td className="p-3 text-muted-foreground">{(c.items ?? []).length} item(s)</td>
-                  <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded-full ${c.billed ? "bg-success/15 text-success" : "bg-warning/20 text-warning-foreground"}`}>{c.billed ? "Billed" : "Pending"}</span></td>
+                  <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded border ${c.billed ? "border-foreground/30 bg-muted" : "border-warning/40 bg-warning/10"}`}>{c.billed ? "Billed" : "Pending"}</span></td>
                   <td className="p-3 text-right">
                     <Button size="icon" variant="ghost" onClick={() => downloadPdf(c)}><FileDown className="h-4 w-4" /></Button>
                     <Link to="/app/challans/$id" params={{ id: c.id }}><Button size="icon" variant="ghost"><Pencil className="h-4 w-4" /></Button></Link>
