@@ -14,6 +14,7 @@ import { Route as AppRouteImport } from './routes/app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppIndexRouteImport } from './routes/app.index'
 import { Route as AppSettingsRouteImport } from './routes/app.settings'
+import { Route as AppPaymentsRouteImport } from './routes/app.payments'
 import { Route as AppPartiesRouteImport } from './routes/app.parties'
 import { Route as AppChallansIndexRouteImport } from './routes/app.challans.index'
 import { Route as AppBillsIndexRouteImport } from './routes/app.bills.index'
@@ -43,6 +44,11 @@ const AppIndexRoute = AppIndexRouteImport.update({
 const AppSettingsRoute = AppSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPaymentsRoute = AppPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
   getParentRoute: () => AppRoute,
 } as any)
 const AppPartiesRoute = AppPartiesRouteImport.update({
@@ -76,6 +82,7 @@ export interface FileRoutesByFullPath {
   '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/app/parties': typeof AppPartiesRoute
+  '/app/payments': typeof AppPaymentsRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/': typeof AppIndexRoute
   '/app/bills/$id': typeof AppBillsIdRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/app/parties': typeof AppPartiesRoute
+  '/app/payments': typeof AppPaymentsRoute
   '/app/settings': typeof AppSettingsRoute
   '/app': typeof AppIndexRoute
   '/app/bills/$id': typeof AppBillsIdRoute
@@ -100,6 +108,7 @@ export interface FileRoutesById {
   '/app': typeof AppRouteWithChildren
   '/login': typeof LoginRoute
   '/app/parties': typeof AppPartiesRoute
+  '/app/payments': typeof AppPaymentsRoute
   '/app/settings': typeof AppSettingsRoute
   '/app/': typeof AppIndexRoute
   '/app/bills/$id': typeof AppBillsIdRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/login'
     | '/app/parties'
+    | '/app/payments'
     | '/app/settings'
     | '/app/'
     | '/app/bills/$id'
@@ -125,6 +135,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/app/parties'
+    | '/app/payments'
     | '/app/settings'
     | '/app'
     | '/app/bills/$id'
@@ -137,6 +148,7 @@ export interface FileRouteTypes {
     | '/app'
     | '/login'
     | '/app/parties'
+    | '/app/payments'
     | '/app/settings'
     | '/app/'
     | '/app/bills/$id'
@@ -188,6 +200,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppSettingsRouteImport
       parentRoute: typeof AppRoute
     }
+    '/app/payments': {
+      id: '/app/payments'
+      path: '/payments'
+      fullPath: '/app/payments'
+      preLoaderRoute: typeof AppPaymentsRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/app/parties': {
       id: '/app/parties'
       path: '/parties'
@@ -228,6 +247,7 @@ declare module '@tanstack/react-router' {
 
 interface AppRouteChildren {
   AppPartiesRoute: typeof AppPartiesRoute
+  AppPaymentsRoute: typeof AppPaymentsRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppIndexRoute: typeof AppIndexRoute
   AppBillsIdRoute: typeof AppBillsIdRoute
@@ -238,6 +258,7 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppPartiesRoute: AppPartiesRoute,
+  AppPaymentsRoute: AppPaymentsRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppIndexRoute: AppIndexRoute,
   AppBillsIdRoute: AppBillsIdRoute,
