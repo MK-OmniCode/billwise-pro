@@ -255,8 +255,8 @@ function BillForm() {
               <div key={i} className="grid grid-cols-12 gap-2 items-center bg-muted/20 p-2 rounded-md">
                 <div className="col-span-1 text-sm text-center font-medium">{i + 1}</div>
                 <Input className="col-span-5" value={it.description} onChange={(e) => updItem(i, { description: e.target.value })} placeholder="Item description" />
-                <Input className="col-span-2 text-right" type="number" step="0.001" value={it.weight} onChange={(e) => updItem(i, { weight: Number(e.target.value) })} />
-                <Input className="col-span-2 text-right" type="number" step="0.01" value={it.rate} onChange={(e) => updItem(i, { rate: Number(e.target.value) })} />
+                <NumberInput className="col-span-2 text-right" step="0.001" placeholder="0" value={it.weight} onChange={(n) => updItem(i, { weight: n })} />
+                <NumberInput className="col-span-2 text-right" step="0.01" placeholder="0" value={it.rate} onChange={(n) => updItem(i, { rate: n })} />
                 <div className="col-span-1 text-right font-medium text-sm">{fmtINR(it.amount)}</div>
                 <Button size="icon" variant="ghost" className="col-span-1" onClick={() => delItem(i)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
               </div>
