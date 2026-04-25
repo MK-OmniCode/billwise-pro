@@ -176,7 +176,7 @@ function PaymentsPage() {
       <PageHeader title="Manage Payments" subtitle="Track money received and bills given" />
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <Card className="border-border/60 bg-gradient-to-br from-emerald-500/10 to-transparent">
+        <Card className="shadow-none bg-gradient-to-br from-emerald-500/10 to-transparent">
           <CardContent className="p-5 flex items-center justify-between">
             <div>
               <div className="text-xs uppercase tracking-wider text-muted-foreground">Total Received</div>
@@ -188,7 +188,7 @@ function PaymentsPage() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-border/60 bg-gradient-to-br from-primary/10 to-transparent">
+        <Card className="shadow-none bg-gradient-to-br from-primary/10 to-transparent">
           <CardContent className="p-5 flex items-center justify-between">
             <div>
               <div className="text-xs uppercase tracking-wider text-muted-foreground">Total Bills Given</div>
@@ -210,11 +210,11 @@ function PaymentsPage() {
 
         {/* PAYMENTS RECEIVED */}
         <TabsContent value="received" className="mt-4">
-          <Card className="border-border/60">
+          <Card className="shadow-none">
             <CardContent className="p-0">
               <div className="flex items-center justify-between p-4 border-b border-border">
                 <h3 className="font-semibold">Payments Received</h3>
-                <Button onClick={openNewPay} className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" />Add Payment</Button>
+                <Button onClick={openNewPay}><Plus className="h-4 w-4 mr-2" />Add Payment</Button>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -233,7 +233,7 @@ function PaymentsPage() {
                       <tr><td colSpan={6} className="text-center text-muted-foreground p-8">No payments yet. Click <b>Add Payment</b>.</td></tr>
                     )}
                     {payments.map((r) => (
-                      <tr key={r.id} className="border-b border-border/60 hover:bg-muted/30">
+                      <tr key={r.id} className="border-b shadow-none hover:bg-muted/30">
                         <td className="p-3">{r.payment_date}</td>
                         <td className="p-3 font-medium">{r.party_name}</td>
                         <td className="p-3 capitalize">{r.mode}</td>
@@ -255,11 +255,11 @@ function PaymentsPage() {
 
         {/* BILLS GIVEN */}
         <TabsContent value="given" className="mt-4">
-          <Card className="border-border/60">
+          <Card className="shadow-none">
             <CardContent className="p-0">
               <div className="flex items-center justify-between p-4 border-b border-border">
                 <h3 className="font-semibold">Bills Given</h3>
-                <Button onClick={openNewBg} className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" />Add Bill Given</Button>
+                <Button onClick={openNewBg}><Plus className="h-4 w-4 mr-2" />Add Bill Given</Button>
               </div>
               <div className="overflow-x-auto">
                 <table className="w-full text-sm">
@@ -278,7 +278,7 @@ function PaymentsPage() {
                       <tr><td colSpan={6} className="text-center text-muted-foreground p-8">No entries yet. Click <b>Add Bill Given</b>.</td></tr>
                     )}
                     {billsGiven.map((r) => (
-                      <tr key={r.id} className="border-b border-border/60 hover:bg-muted/30">
+                      <tr key={r.id} className="border-b shadow-none hover:bg-muted/30">
                         <td className="p-3">{r.given_date}</td>
                         <td className="p-3 font-mono text-xs">{r.bill_no || "—"}</td>
                         <td className="p-3 font-medium">{r.party_name}</td>
@@ -334,7 +334,7 @@ function PaymentsPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setPayOpen(false)}>Cancel</Button>
-            <Button onClick={savePay} className="bg-primary hover:bg-primary/90">Save</Button>
+            <Button onClick={savePay}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>
@@ -361,7 +361,7 @@ function PaymentsPage() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setBgOpen(false)}>Cancel</Button>
-            <Button onClick={saveBg} className="bg-primary hover:bg-primary/90">Save</Button>
+            <Button onClick={saveBg}>Save</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

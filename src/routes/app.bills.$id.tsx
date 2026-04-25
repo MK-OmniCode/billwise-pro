@@ -200,12 +200,12 @@ function BillForm() {
           <>
             <Button variant="outline" onClick={() => navigate({ to: "/app/bills" })}>Cancel</Button>
             <Button variant="outline" onClick={saveAndPdf}><FileDown className="h-4 w-4 mr-2" />Save & PDF</Button>
-            <Button onClick={save} disabled={busy} className="bg-primary hover:bg-primary/90"><Save className="h-4 w-4 mr-2" />Save</Button>
+            <Button onClick={save} disabled={busy}><Save className="h-4 w-4 mr-2" />Save</Button>
           </>
         }
       />
 
-      <Card className="mb-4 border-border/60">
+      <Card className="mb-4 shadow-none">
         <CardContent className="p-6 grid grid-cols-4 gap-4">
           <div><Label>Bill No</Label><Input value={billNo} onChange={(e) => setBillNo(e.target.value)} /></div>
           <div><Label>Date</Label><Input type="date" value={date} onChange={(e) => setDate(e.target.value)} /></div>
@@ -231,7 +231,7 @@ function BillForm() {
         </CardContent>
       </Card>
 
-      <Card className="border-border/60 mb-4">
+      <Card className="shadow-none mb-4">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-3">
             <h3 className="font-semibold">Items</h3>
@@ -266,13 +266,13 @@ function BillForm() {
       </Card>
 
       <div className="grid grid-cols-3 gap-4">
-        <Card className="col-span-2 border-border/60">
+        <Card className="col-span-2 shadow-none">
           <CardContent className="p-6">
             <Label>Notes</Label>
             <Textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Bank details, terms, thank you note…" />
           </CardContent>
         </Card>
-        <Card className="border-border/60 bg-secondary/30">
+        <Card className="shadow-none bg-secondary/30">
           <CardContent className="p-6 space-y-2">
             <div className="flex items-center justify-between mb-2">
               <Label className="cursor-pointer flex items-center gap-2">
@@ -321,7 +321,7 @@ function BillForm() {
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setPickerOpen(false)}>Cancel</Button>
-            <Button onClick={importChallans} className="bg-primary hover:bg-primary/90">Import Selected</Button>
+            <Button onClick={importChallans}>Import Selected</Button>
           </DialogFooter>
         </DialogContent>
       </Dialog>

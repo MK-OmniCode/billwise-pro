@@ -70,13 +70,13 @@ function BillsList() {
       <PageHeader
         title="Bills"
         subtitle="Tax invoices"
-        actions={<Link to="/app/bills/$id" params={{ id: "new" }}><Button className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" />New Bill</Button></Link>}
+        actions={<Link to="/app/bills/$id" params={{ id: "new" }}><Button><Plus className="h-4 w-4 mr-2" />New Bill</Button></Link>}
       />
       <div className="relative mb-4 max-w-sm">
         <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input placeholder="Search bills…" value={q} onChange={(e) => setQ(e.target.value)} className="pl-9" />
       </div>
-      <Card className="border-border/60">
+      <Card className="shadow-none">
         <CardContent className="p-0">
           <table className="w-full text-sm">
             <thead className="bg-muted/50 border-b border-border">
