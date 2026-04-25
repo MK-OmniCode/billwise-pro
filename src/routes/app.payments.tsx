@@ -169,8 +169,31 @@ function PaymentsPage() {
     });
   };
 
+
   const totalReceived = useMemo(() => payments.reduce((s, p) => s + Number(p.amount), 0), [payments]);
   const totalGiven = useMemo(() => billsGiven.reduce((s, p) => s + Number(p.amount), 0), [billsGiven]);
+
+  const exportPaymentsSummary = async () => {
+    if (payments.length === 0) { toast.error("No payments to export"); return; }
+    const dates = payments.map(p => p.payment_date).sort();
+    await generatePaymentsSummaryPDF({
+      company: (company ?? { company_name: "BS Dyeing" }) as never,
+      rows: payments,
+      fromDate: dates[0],
+      toDate: dates[dates.length - 1],
+    });
+  };
+  const exportBillsGivenSummary = async () => {
+    if (billsGiven.length === 0) { toast.error("No bills to export"); return; }
+    const dates = billsGiven.map(b => b.given_date).sort();
+    await generateBillsGivenSummaryPDF({
+      company: (company ?? { company_name: "BS Dyeing" }) as never,
+      rows: billsGiven,
+      fromDate: dates[0],
+      toDate: dates[dates.length - 1],
+    });
+  };
+
 
   return (
     <div className="p-6 md:p-8 max-w-7xl">
