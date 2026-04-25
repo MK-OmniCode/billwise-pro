@@ -38,36 +38,34 @@ function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4 relative overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-primary opacity-[0.04]" />
-      <Card className="w-full max-w-md shadow-elegant border-border/60 relative">
+    <div className="min-h-screen flex items-center justify-center bg-background p-4">
+      <Card className="w-full max-w-md shadow-none">
         <CardContent className="p-8">
-          <div className="flex flex-col items-center mb-6">
-            <img src={logo} alt="BS Dyeing" width={64} height={64} className="mb-3" />
-            <h1 className="font-display text-2xl font-bold text-gradient-gold">BS Dyeing</h1>
-            <p className="text-xs text-muted-foreground mt-1">Challan & Bill Management</p>
+          <div className="text-center mb-8">
+            <h1 className="font-display text-3xl font-bold tracking-tight">BS Dyeing</h1>
+            <p className="text-sm text-muted-foreground mt-1">Challan & Bill Management</p>
           </div>
 
           <form onSubmit={submit} className="space-y-4">
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <Label htmlFor="email">Email</Label>
               <Input id="email" type="email" required value={email} onChange={(e) => setEmail(e.target.value)} placeholder="you@example.com" />
             </div>
-            <div className="space-y-2">
+            <div className="space-y-1.5">
               <Label htmlFor="password">Password</Label>
               <Input id="password" type="password" required minLength={6} value={password} onChange={(e) => setPassword(e.target.value)} placeholder="••••••••" />
             </div>
-            <Button type="submit" disabled={busy} className="w-full bg-primary hover:bg-primary/90">
-              {busy ? "Please wait…" : mode === "signin" ? "Sign In" : "Create Account"}
+            <Button type="submit" disabled={busy} className="w-full">
+              {busy ? "Please wait…" : mode === "signin" ? "Sign in" : "Create account"}
             </Button>
           </form>
 
-          <div className="text-center text-sm text-muted-foreground mt-5">
+          <div className="text-center text-sm text-muted-foreground mt-6">
             {mode === "signin" ? "First time? " : "Already have an account? "}
             <button
               type="button"
               onClick={() => setMode(mode === "signin" ? "signup" : "signin")}
-              className="text-primary font-medium hover:underline"
+              className="text-foreground font-medium underline underline-offset-4"
             >
               {mode === "signin" ? "Create account" : "Sign in"}
             </button>
