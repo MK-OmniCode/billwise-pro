@@ -387,7 +387,7 @@ function PaymentsPage() {
               </Select>
             </div>
             <div className="col-span-2"><Label>Or type party name</Label><Input value={bgPartyName} onChange={(e) => { setBgPartyName(e.target.value); setBgPartyId(""); }} placeholder="Party name" /></div>
-            <div className="col-span-2"><Label>Amount (₹)</Label><Input type="number" step="0.01" value={bgAmount} onChange={(e) => setBgAmount(Number(e.target.value))} /></div>
+            <div className="col-span-2"><Label>Amount (₹)</Label><NumberInput step="0.01" placeholder="0.00" value={bgAmount} onChange={setBgAmount} /></div>
             <div className="col-span-2"><Label>Notes</Label><Textarea rows={2} value={bgNotes} onChange={(e) => setBgNotes(e.target.value)} /></div>
           </div>
           <DialogFooter>
