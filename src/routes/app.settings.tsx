@@ -9,9 +9,10 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Plus, Trash2, Save } from "lucide-react";
 import { toast } from "sonner";
-import { fmtINR } from "@/lib/utils-bs";
+import { fmtINR, rateForWeight, type PricingRule } from "@/lib/utils-bs";
 
 export const Route = createFileRoute("/app/settings")({
   component: SettingsPage,
@@ -33,7 +34,16 @@ type Settings = {
   challan_prefix: string;
 };
 
-type Rule = { id?: string; min_weight: number; max_weight: number; rate_per_kg: number; label: string; _new?: boolean };
+type Rule = {
+  id?: string;
+  match_type: "between" | "equals";
+  exact_weight: number;
+  min_weight: number;
+  max_weight: number;
+  rate_per_kg: number;
+  label: string;
+  _new?: boolean;
+};
 
 function SettingsPage() {
   const { user } = useAuth();
@@ -54,7 +64,15 @@ function SettingsPage() {
       setS(def);
     }
     const { data: r } = await supabase.from("pricing_rules").select("*").order("min_weight");
-    setRules((r ?? []) as Rule[]);
+    setRules(((r ?? []) as Array<Partial<Rule>>).map((x) => ({
+      id: x.id,
+      match_type: (x.match_type as "between" | "equals") ?? "between",
+      exact_weight: Number(x.exact_weight ?? 0),
+      min_weight: Number(x.min_weight ?? 0),
+      max_weight: Number(x.max_weight ?? 0),
+      rate_per_kg: Number(x.rate_per_kg ?? 0),
+      label: x.label ?? "",
+    })));
   };
   useEffect(() => { if (user) load(); }, [user]);
 
@@ -69,7 +87,7 @@ function SettingsPage() {
     load();
   };
 
-  const addRule = () => setRules([...rules, { min_weight: 0, max_weight: 1, rate_per_kg: 50, label: "", _new: true }]);
+  const addRule = () => setRules([...rules, { match_type: "between", exact_weight: 0, min_weight: 0, max_weight: 1, rate_per_kg: 50, label: "", _new: true }]);
   const updRule = (i: number, patch: Partial<Rule>) => {
     const c = [...rules]; c[i] = { ...c[i], ...patch }; setRules(c);
   };
@@ -84,22 +102,26 @@ function SettingsPage() {
   };
   const saveRules = async () => {
     for (const r of rules) {
-      if (r.min_weight > r.max_weight) { toast.error("Min weight must be ≤ Max weight"); return; }
+      if (r.match_type === "between" && r.min_weight > r.max_weight) {
+        toast.error("Min weight must be ≤ Max weight"); return;
+      }
     }
-    const toInsert = rules.filter(r => r._new).map(r => ({
-      user_id: user!.id, min_weight: r.min_weight, max_weight: r.max_weight,
-      rate_per_kg: r.rate_per_kg, label: r.label || "",
-    }));
-    const toUpdate = rules.filter(r => r.id && !r._new);
+    const toRow = (r: Rule) => ({
+      match_type: r.match_type,
+      exact_weight: r.match_type === "equals" ? r.exact_weight : null,
+      min_weight: r.match_type === "between" ? r.min_weight : 0,
+      max_weight: r.match_type === "between" ? r.max_weight : 0,
+      rate_per_kg: r.rate_per_kg,
+      label: r.label || "",
+    });
+    const toInsert = rules.filter((r) => r._new).map((r) => ({ user_id: user!.id, ...toRow(r) }));
+    const toUpdate = rules.filter((r) => r.id && !r._new);
     if (toInsert.length) {
       const { error } = await supabase.from("pricing_rules").insert(toInsert);
       if (error) return toast.error(error.message);
     }
     for (const r of toUpdate) {
-      const { error } = await supabase.from("pricing_rules").update({
-        min_weight: r.min_weight, max_weight: r.max_weight,
-        rate_per_kg: r.rate_per_kg, label: r.label || "",
-      }).eq("id", r.id!);
+      const { error } = await supabase.from("pricing_rules").update(toRow(r)).eq("id", r.id!);
       if (error) return toast.error(error.message);
     }
     toast.success("Pricing rules saved");
@@ -161,10 +183,10 @@ function SettingsPage() {
 
           <div className="mt-4 space-y-2">
             <div className="grid grid-cols-12 gap-2 text-xs uppercase tracking-wider text-muted-foreground px-2">
-              <div className="col-span-2">Min Weight (kg)</div>
-              <div className="col-span-2">Max Weight (kg)</div>
-              <div className="col-span-3">Rate (₹/kg)</div>
-              <div className="col-span-4">Label (optional)</div>
+              <div className="col-span-2">Match Type</div>
+              <div className="col-span-4">Weight Condition</div>
+              <div className="col-span-2">Rate (₹/kg)</div>
+              <div className="col-span-3">Label</div>
               <div className="col-span-1"></div>
             </div>
             {rules.length === 0 && (
@@ -174,17 +196,35 @@ function SettingsPage() {
             )}
             {rules.map((r, i) => (
               <div key={i} className="grid grid-cols-12 gap-2 items-center bg-muted/20 p-2 rounded-md">
-                <Input className="col-span-2" type="number" step="0.001" value={r.min_weight} onChange={(e) => updRule(i, { min_weight: Number(e.target.value) })} />
-                <Input className="col-span-2" type="number" step="0.001" value={r.max_weight} onChange={(e) => updRule(i, { max_weight: Number(e.target.value) })} />
-                <Input className="col-span-3" type="number" step="0.01" value={r.rate_per_kg} onChange={(e) => updRule(i, { rate_per_kg: Number(e.target.value) })} />
-                <Input className="col-span-4" value={r.label} onChange={(e) => updRule(i, { label: e.target.value })} placeholder="e.g. Standard" />
+                <div className="col-span-2">
+                  <Select value={r.match_type} onValueChange={(v) => updRule(i, { match_type: v as "between" | "equals" })}>
+                    <SelectTrigger className="h-9"><SelectValue /></SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="between">Between</SelectItem>
+                      <SelectItem value="equals">Equal to</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                {r.match_type === "between" ? (
+                  <div className="col-span-4 grid grid-cols-2 gap-2">
+                    <Input type="number" step="0.001" placeholder="Min kg" value={r.min_weight} onChange={(e) => updRule(i, { min_weight: Number(e.target.value) })} />
+                    <Input type="number" step="0.001" placeholder="Max kg" value={r.max_weight} onChange={(e) => updRule(i, { max_weight: Number(e.target.value) })} />
+                  </div>
+                ) : (
+                  <div className="col-span-4">
+                    <Input type="number" step="0.001" placeholder="Exact kg (e.g. 5 or 3.5)" value={r.exact_weight} onChange={(e) => updRule(i, { exact_weight: Number(e.target.value) })} />
+                  </div>
+                )}
+                <Input className="col-span-2" type="number" step="0.01" value={r.rate_per_kg} onChange={(e) => updRule(i, { rate_per_kg: Number(e.target.value) })} />
+                <Input className="col-span-3" value={r.label} onChange={(e) => updRule(i, { label: e.target.value })} placeholder="e.g. Standard" />
                 <Button size="icon" variant="ghost" className="col-span-1" onClick={() => delRule(i)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
               </div>
             ))}
             {rules.length > 0 && (
-              <p className="text-xs text-muted-foreground mt-2">
-                Example: 1.5 kg → {fmtINR(rules.find(r => 1.5 >= r.min_weight && 1.5 <= r.max_weight)?.rate_per_kg ?? 0)}/kg
-              </p>
+              <div className="text-xs text-muted-foreground mt-2 space-y-1">
+                <p>💡 <b>Equal to</b> wins over <b>Between</b>. Decimals like <code>3.5</code> work.</p>
+                <p>Test: 1.5 kg → {fmtINR(rateForWeight(1.5, rules as PricingRule[]))}/kg • 5 kg → {fmtINR(rateForWeight(5, rules as PricingRule[]))}/kg</p>
+              </div>
             )}
           </div>
         </CardContent>
