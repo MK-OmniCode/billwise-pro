@@ -359,7 +359,7 @@ function PaymentsPage() {
               </Select>
             </div>
             <div className="col-span-2"><Label>Or type party name</Label><Input value={payPartyName} onChange={(e) => { setPayPartyName(e.target.value); setPayPartyId(""); }} placeholder="Party name" /></div>
-            <div><Label>Amount (₹)</Label><Input type="number" step="0.01" value={payAmount} onChange={(e) => setPayAmount(Number(e.target.value))} /></div>
+            <div><Label>Amount (₹)</Label><NumberInput step="0.01" placeholder="0.00" value={payAmount} onChange={setPayAmount} /></div>
             <div><Label>Reference</Label><Input value={payRef} onChange={(e) => setPayRef(e.target.value)} placeholder="UPI ref / cheque no." /></div>
             <div className="col-span-2"><Label>Notes</Label><Textarea rows={2} value={payNotes} onChange={(e) => setPayNotes(e.target.value)} /></div>
           </div>
