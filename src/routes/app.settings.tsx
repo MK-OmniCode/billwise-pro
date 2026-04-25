@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus, Trash2, Save } from "lucide-react";
 import { toast } from "sonner";
 import { fmtINR, rateForWeight, type PricingRule } from "@/lib/utils-bs";
+import { NumberInput } from "@/components/NumberInput";
 
 export const Route = createFileRoute("/app/settings")({
   component: SettingsPage,
