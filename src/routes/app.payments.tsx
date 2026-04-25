@@ -11,10 +11,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Trash2, FileDown, Pencil, Wallet, Receipt as ReceiptIcon } from "lucide-react";
+import { Plus, Trash2, FileDown, Pencil, Wallet, Receipt as ReceiptIcon, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { fmtINR, todayISO } from "@/lib/utils-bs";
-import { generatePaymentReceiptPDF, generateBillGivenPDF } from "@/lib/pdf";
+import { generatePaymentReceiptPDF, generateBillGivenPDF, generatePaymentsSummaryPDF, generateBillsGivenSummaryPDF } from "@/lib/pdf";
+import { NumberInput } from "@/components/NumberInput";
 
 export const Route = createFileRoute("/app/payments")({
   component: PaymentsPage,
@@ -168,8 +169,31 @@ function PaymentsPage() {
     });
   };
 
+
   const totalReceived = useMemo(() => payments.reduce((s, p) => s + Number(p.amount), 0), [payments]);
   const totalGiven = useMemo(() => billsGiven.reduce((s, p) => s + Number(p.amount), 0), [billsGiven]);
+
+  const exportPaymentsSummary = async () => {
+    if (payments.length === 0) { toast.error("No payments to export"); return; }
+    const dates = payments.map(p => p.payment_date).sort();
+    await generatePaymentsSummaryPDF({
+      company: (company ?? { company_name: "BS Dyeing" }) as never,
+      rows: payments,
+      fromDate: dates[0],
+      toDate: dates[dates.length - 1],
+    });
+  };
+  const exportBillsGivenSummary = async () => {
+    if (billsGiven.length === 0) { toast.error("No bills to export"); return; }
+    const dates = billsGiven.map(b => b.given_date).sort();
+    await generateBillsGivenSummaryPDF({
+      company: (company ?? { company_name: "BS Dyeing" }) as never,
+      rows: billsGiven,
+      fromDate: dates[0],
+      toDate: dates[dates.length - 1],
+    });
+  };
+
 
   return (
     <div className="p-6 md:p-8 max-w-7xl">
@@ -177,23 +201,33 @@ function PaymentsPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
         <Card className="shadow-none">
-          <CardContent className="p-4 flex items-center justify-between">
-            <div>
-              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Total Received</div>
-              <div className="text-2xl font-bold mt-1 num">{fmtINR(totalReceived)}</div>
-              <div className="text-xs text-muted-foreground mt-1">{payments.length} entries</div>
+          <CardContent className="p-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Total Received</div>
+                <div className="text-2xl font-bold mt-1 num">{fmtINR(totalReceived)}</div>
+                <div className="text-xs text-muted-foreground mt-1">{payments.length} entries</div>
+              </div>
+              <Wallet className="h-5 w-5 text-muted-foreground" />
             </div>
-            <Wallet className="h-5 w-5 text-muted-foreground" />
+            <Button size="sm" variant="outline" className="mt-3 w-full" onClick={exportPaymentsSummary}>
+              <FileText className="h-4 w-4 mr-2" />Download Summary PDF
+            </Button>
           </CardContent>
         </Card>
         <Card className="shadow-none">
-          <CardContent className="p-4 flex items-center justify-between">
-            <div>
-              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Total Bills Given</div>
-              <div className="text-2xl font-bold mt-1 num">{fmtINR(totalGiven)}</div>
-              <div className="text-xs text-muted-foreground mt-1">{billsGiven.length} entries</div>
+          <CardContent className="p-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Total Bills Given</div>
+                <div className="text-2xl font-bold mt-1 num">{fmtINR(totalGiven)}</div>
+                <div className="text-xs text-muted-foreground mt-1">{billsGiven.length} entries</div>
+              </div>
+              <ReceiptIcon className="h-5 w-5 text-muted-foreground" />
             </div>
-            <ReceiptIcon className="h-5 w-5 text-muted-foreground" />
+            <Button size="sm" variant="outline" className="mt-3 w-full" onClick={exportBillsGivenSummary}>
+              <FileText className="h-4 w-4 mr-2" />Download Summary PDF
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -203,6 +237,7 @@ function PaymentsPage() {
           <TabsTrigger value="received">Payments Received</TabsTrigger>
           <TabsTrigger value="given">Bills Given</TabsTrigger>
         </TabsList>
+
 
         {/* PAYMENTS RECEIVED */}
         <TabsContent value="received" className="mt-4">
@@ -324,7 +359,7 @@ function PaymentsPage() {
               </Select>
             </div>
             <div className="col-span-2"><Label>Or type party name</Label><Input value={payPartyName} onChange={(e) => { setPayPartyName(e.target.value); setPayPartyId(""); }} placeholder="Party name" /></div>
-            <div><Label>Amount (₹)</Label><Input type="number" step="0.01" value={payAmount} onChange={(e) => setPayAmount(Number(e.target.value))} /></div>
+            <div><Label>Amount (₹)</Label><NumberInput step="0.01" placeholder="0.00" value={payAmount} onChange={setPayAmount} /></div>
             <div><Label>Reference</Label><Input value={payRef} onChange={(e) => setPayRef(e.target.value)} placeholder="UPI ref / cheque no." /></div>
             <div className="col-span-2"><Label>Notes</Label><Textarea rows={2} value={payNotes} onChange={(e) => setPayNotes(e.target.value)} /></div>
           </div>
@@ -352,7 +387,7 @@ function PaymentsPage() {
               </Select>
             </div>
             <div className="col-span-2"><Label>Or type party name</Label><Input value={bgPartyName} onChange={(e) => { setBgPartyName(e.target.value); setBgPartyId(""); }} placeholder="Party name" /></div>
-            <div className="col-span-2"><Label>Amount (₹)</Label><Input type="number" step="0.01" value={bgAmount} onChange={(e) => setBgAmount(Number(e.target.value))} /></div>
+            <div className="col-span-2"><Label>Amount (₹)</Label><NumberInput step="0.01" placeholder="0.00" value={bgAmount} onChange={setBgAmount} /></div>
             <div className="col-span-2"><Label>Notes</Label><Textarea rows={2} value={bgNotes} onChange={(e) => setBgNotes(e.target.value)} /></div>
           </div>
           <DialogFooter>

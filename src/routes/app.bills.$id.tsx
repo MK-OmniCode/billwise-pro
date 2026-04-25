@@ -15,6 +15,7 @@ import { Plus, Trash2, Save, FileDown, ListPlus } from "lucide-react";
 import { toast } from "sonner";
 import { fmtINR, nextDocNo, rateForWeight, todayISO, type PricingRule } from "@/lib/utils-bs";
 import { generateBillPDF } from "@/lib/pdf";
+import { NumberInput } from "@/components/NumberInput";
 
 export const Route = createFileRoute("/app/bills/$id")({
   component: BillForm,
@@ -254,8 +255,8 @@ function BillForm() {
               <div key={i} className="grid grid-cols-12 gap-2 items-center bg-muted/20 p-2 rounded-md">
                 <div className="col-span-1 text-sm text-center font-medium">{i + 1}</div>
                 <Input className="col-span-5" value={it.description} onChange={(e) => updItem(i, { description: e.target.value })} placeholder="Item description" />
-                <Input className="col-span-2 text-right" type="number" step="0.001" value={it.weight} onChange={(e) => updItem(i, { weight: Number(e.target.value) })} />
-                <Input className="col-span-2 text-right" type="number" step="0.01" value={it.rate} onChange={(e) => updItem(i, { rate: Number(e.target.value) })} />
+                <NumberInput className="col-span-2 text-right" step="0.001" placeholder="0" value={it.weight} onChange={(n) => updItem(i, { weight: n })} />
+                <NumberInput className="col-span-2 text-right" step="0.01" placeholder="0" value={it.rate} onChange={(n) => updItem(i, { rate: n })} />
                 <div className="col-span-1 text-right font-medium text-sm">{fmtINR(it.amount)}</div>
                 <Button size="icon" variant="ghost" className="col-span-1" onClick={() => delItem(i)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
               </div>
@@ -282,11 +283,11 @@ function BillForm() {
             </div>
             {!useIgst ? (
               <>
-                <div className="flex items-center justify-between text-sm"><span>CGST %</span><Input className="w-20 h-7 text-right" type="number" step="0.01" value={cgstPct} onChange={(e) => setCgstPct(Number(e.target.value))} /></div>
-                <div className="flex items-center justify-between text-sm"><span>SGST %</span><Input className="w-20 h-7 text-right" type="number" step="0.01" value={sgstPct} onChange={(e) => setSgstPct(Number(e.target.value))} /></div>
+                <div className="flex items-center justify-between text-sm"><span>CGST %</span><NumberInput className="w-20 h-7 text-right" step="0.01" placeholder="0" value={cgstPct} onChange={setCgstPct} /></div>
+                <div className="flex items-center justify-between text-sm"><span>SGST %</span><NumberInput className="w-20 h-7 text-right" step="0.01" placeholder="0" value={sgstPct} onChange={setSgstPct} /></div>
               </>
             ) : (
-              <div className="flex items-center justify-between text-sm"><span>IGST %</span><Input className="w-20 h-7 text-right" type="number" step="0.01" value={igstPct} onChange={(e) => setIgstPct(Number(e.target.value))} /></div>
+              <div className="flex items-center justify-between text-sm"><span>IGST %</span><NumberInput className="w-20 h-7 text-right" step="0.01" placeholder="0" value={igstPct} onChange={setIgstPct} /></div>
             )}
             <div className="border-t border-border my-2 pt-2 space-y-1 text-sm num">
               <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span className="font-medium">{fmtINR(totals.subtotal)}</span></div>

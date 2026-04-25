@@ -334,6 +334,138 @@ export async function generatePaymentReceiptPDF(opts: {
   doc.save(`Receipt-${opts.partyName.replace(/\s+/g, "_")}-${opts.date}.pdf`);
 }
 
+// ============== SUMMARY: PAYMENTS RECEIVED ==============
+export async function generatePaymentsSummaryPDF(opts: {
+  company: CompanyInfo;
+  rows: Array<{ payment_date: string; party_name: string; mode: string; reference?: string | null; amount: number }>;
+  fromDate?: string;
+  toDate?: string;
+}) {
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  header(doc, opts.company, "Payments Received — Summary");
+
+  const range = opts.fromDate || opts.toDate ? `${opts.fromDate || "—"}  to  ${opts.toDate || "—"}` : `All entries`;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(...GREY);
+  doc.text("Period:", 14, 52);
+  doc.setTextColor(...BLACK);
+  doc.setFont("helvetica", "bold");
+  doc.text(range, 30, 52);
+
+  const total = opts.rows.reduce((s, r) => s + Number(r.amount || 0), 0);
+
+  autoTable(doc, {
+    startY: 58,
+    head: [["S.No", "Date", "Party", "Mode", "Reference", "Amount (Rs)"]],
+    body: opts.rows.map((r, i) => [
+      String(i + 1),
+      r.payment_date,
+      r.party_name || "—",
+      (r.mode || "").toUpperCase(),
+      r.reference || "—",
+      fmtNum(Number(r.amount), 2),
+    ]),
+    foot: [["", "", "", "", "TOTAL", fmtNum(total, 2)]],
+    theme: "plain",
+    styles: { font: "helvetica", fontSize: 9, cellPadding: 2.5, textColor: BLACK, lineColor: BLACK, lineWidth: 0.2 },
+    headStyles: { fillColor: [255, 255, 255], textColor: BLACK, fontStyle: "bold", lineWidth: { top: 0.5, bottom: 0.5, left: 0, right: 0 } as never },
+    footStyles: { fillColor: [255, 255, 255], textColor: BLACK, fontStyle: "bold", lineWidth: { top: 0.5, bottom: 0.5, left: 0, right: 0 } as never },
+    bodyStyles: { lineWidth: { bottom: 0.1, top: 0, left: 0, right: 0 } as never },
+    columnStyles: {
+      0: { cellWidth: 12, halign: "center" },
+      1: { cellWidth: 24 },
+      2: { cellWidth: "auto" as never },
+      3: { cellWidth: 22 },
+      4: { cellWidth: 38 },
+      5: { cellWidth: 30, halign: "right" },
+    },
+  });
+
+  const y = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(...BLACK);
+  doc.text("Grand Total Received:", 14, y);
+  doc.text(fmtINR(total), 196, y, { align: "right" });
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.text("Amount in Words:", 14, y + 8);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(...DARK);
+  const words = doc.splitTextToSize(amountInWords(total), 180);
+  doc.text(words, 14, y + 13);
+
+  footer(doc, opts.company.signature_label || "For " + opts.company.company_name);
+  doc.save(`Payments-Summary-${new Date().toISOString().slice(0, 10)}.pdf`);
+}
+
+// ============== SUMMARY: BILLS GIVEN ==============
+export async function generateBillsGivenSummaryPDF(opts: {
+  company: CompanyInfo;
+  rows: Array<{ given_date: string; bill_no: string; party_name: string; amount: number; notes?: string | null }>;
+  fromDate?: string;
+  toDate?: string;
+}) {
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  header(doc, opts.company, "Bills Given — Summary");
+
+  const range = opts.fromDate || opts.toDate ? `${opts.fromDate || "—"}  to  ${opts.toDate || "—"}` : `All entries`;
+  doc.setFont("helvetica", "normal");
+  doc.setFontSize(9);
+  doc.setTextColor(...GREY);
+  doc.text("Period:", 14, 52);
+  doc.setTextColor(...BLACK);
+  doc.setFont("helvetica", "bold");
+  doc.text(range, 30, 52);
+
+  const total = opts.rows.reduce((s, r) => s + Number(r.amount || 0), 0);
+
+  autoTable(doc, {
+    startY: 58,
+    head: [["S.No", "Date", "Bill No", "Party", "Amount (Rs)"]],
+    body: opts.rows.map((r, i) => [
+      String(i + 1),
+      r.given_date,
+      r.bill_no || "—",
+      r.party_name || "—",
+      fmtNum(Number(r.amount), 2),
+    ]),
+    foot: [["", "", "", "TOTAL", fmtNum(total, 2)]],
+    theme: "plain",
+    styles: { font: "helvetica", fontSize: 9, cellPadding: 2.5, textColor: BLACK, lineColor: BLACK, lineWidth: 0.2 },
+    headStyles: { fillColor: [255, 255, 255], textColor: BLACK, fontStyle: "bold", lineWidth: { top: 0.5, bottom: 0.5, left: 0, right: 0 } as never },
+    footStyles: { fillColor: [255, 255, 255], textColor: BLACK, fontStyle: "bold", lineWidth: { top: 0.5, bottom: 0.5, left: 0, right: 0 } as never },
+    bodyStyles: { lineWidth: { bottom: 0.1, top: 0, left: 0, right: 0 } as never },
+    columnStyles: {
+      0: { cellWidth: 12, halign: "center" },
+      1: { cellWidth: 26 },
+      2: { cellWidth: 32 },
+      3: { cellWidth: "auto" as never },
+      4: { cellWidth: 32, halign: "right" },
+    },
+  });
+
+  const y = (doc as unknown as { lastAutoTable: { finalY: number } }).lastAutoTable.finalY + 10;
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(11);
+  doc.setTextColor(...BLACK);
+  doc.text("Grand Total Bills Given:", 14, y);
+  doc.text(fmtINR(total), 196, y, { align: "right" });
+
+  doc.setFont("helvetica", "bold");
+  doc.setFontSize(9);
+  doc.text("Amount in Words:", 14, y + 8);
+  doc.setFont("helvetica", "normal");
+  doc.setTextColor(...DARK);
+  const words = doc.splitTextToSize(amountInWords(total), 180);
+  doc.text(words, 14, y + 13);
+
+  footer(doc, opts.company.signature_label || "For " + opts.company.company_name);
+  doc.save(`BillsGiven-Summary-${new Date().toISOString().slice(0, 10)}.pdf`);
+}
+
 // ============== BILL GIVEN (manual) ==============
 export async function generateBillGivenPDF(opts: {
   company: CompanyInfo;

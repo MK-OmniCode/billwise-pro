@@ -13,6 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus, Trash2, Save } from "lucide-react";
 import { toast } from "sonner";
 import { fmtINR, rateForWeight, type PricingRule } from "@/lib/utils-bs";
+import { NumberInput } from "@/components/NumberInput";
 
 export const Route = createFileRoute("/app/settings")({
   component: SettingsPage,
@@ -160,9 +161,9 @@ function SettingsPage() {
               <Label className="cursor-pointer">Use IGST (inter-state) instead of CGST + SGST</Label>
             </div>
             <div className="grid grid-cols-3 gap-4">
-              <div><Label>CGST %</Label><Input type="number" step="0.01" value={s.cgst_percent} onChange={(e) => setS({ ...s, cgst_percent: Number(e.target.value) })} disabled={s.use_igst} /></div>
-              <div><Label>SGST %</Label><Input type="number" step="0.01" value={s.sgst_percent} onChange={(e) => setS({ ...s, sgst_percent: Number(e.target.value) })} disabled={s.use_igst} /></div>
-              <div><Label>IGST %</Label><Input type="number" step="0.01" value={s.igst_percent} onChange={(e) => setS({ ...s, igst_percent: Number(e.target.value) })} disabled={!s.use_igst} /></div>
+              <div><Label>CGST %</Label><NumberInput step="0.01" placeholder="0" value={s.cgst_percent} onChange={(n) => setS({ ...s, cgst_percent: n })} disabled={s.use_igst} /></div>
+              <div><Label>SGST %</Label><NumberInput step="0.01" placeholder="0" value={s.sgst_percent} onChange={(n) => setS({ ...s, sgst_percent: n })} disabled={s.use_igst} /></div>
+              <div><Label>IGST %</Label><NumberInput step="0.01" placeholder="0" value={s.igst_percent} onChange={(n) => setS({ ...s, igst_percent: n })} disabled={!s.use_igst} /></div>
             </div>
           </div>
         </CardContent>
@@ -207,15 +208,15 @@ function SettingsPage() {
                 </div>
                 {r.match_type === "between" ? (
                   <div className="col-span-4 grid grid-cols-2 gap-2">
-                    <Input type="number" step="0.001" placeholder="Min kg" value={r.min_weight} onChange={(e) => updRule(i, { min_weight: Number(e.target.value) })} />
-                    <Input type="number" step="0.001" placeholder="Max kg" value={r.max_weight} onChange={(e) => updRule(i, { max_weight: Number(e.target.value) })} />
+                    <NumberInput step="0.001" placeholder="Min kg" value={r.min_weight} onChange={(n) => updRule(i, { min_weight: n })} />
+                    <NumberInput step="0.001" placeholder="Max kg" value={r.max_weight} onChange={(n) => updRule(i, { max_weight: n })} />
                   </div>
                 ) : (
                   <div className="col-span-4">
-                    <Input type="number" step="0.001" placeholder="Exact kg (e.g. 5 or 3.5)" value={r.exact_weight} onChange={(e) => updRule(i, { exact_weight: Number(e.target.value) })} />
+                    <NumberInput step="0.001" placeholder="Exact kg (e.g. 5 or 3.5)" value={r.exact_weight ?? 0} onChange={(n) => updRule(i, { exact_weight: n })} />
                   </div>
                 )}
-                <Input className="col-span-2" type="number" step="0.01" value={r.rate_per_kg} onChange={(e) => updRule(i, { rate_per_kg: Number(e.target.value) })} />
+                <NumberInput className="col-span-2" step="0.01" placeholder="Rate" value={r.rate_per_kg} onChange={(n) => updRule(i, { rate_per_kg: n })} />
                 <Input className="col-span-3" value={r.label} onChange={(e) => updRule(i, { label: e.target.value })} placeholder="e.g. Standard" />
                 <Button size="icon" variant="ghost" className="col-span-1" onClick={() => delRule(i)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
               </div>
