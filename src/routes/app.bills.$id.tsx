@@ -283,11 +283,11 @@ function BillForm() {
             </div>
             {!useIgst ? (
               <>
-                <div className="flex items-center justify-between text-sm"><span>CGST %</span><Input className="w-20 h-7 text-right" type="number" step="0.01" value={cgstPct} onChange={(e) => setCgstPct(Number(e.target.value))} /></div>
-                <div className="flex items-center justify-between text-sm"><span>SGST %</span><Input className="w-20 h-7 text-right" type="number" step="0.01" value={sgstPct} onChange={(e) => setSgstPct(Number(e.target.value))} /></div>
+                <div className="flex items-center justify-between text-sm"><span>CGST %</span><NumberInput className="w-20 h-7 text-right" step="0.01" placeholder="0" value={cgstPct} onChange={setCgstPct} /></div>
+                <div className="flex items-center justify-between text-sm"><span>SGST %</span><NumberInput className="w-20 h-7 text-right" step="0.01" placeholder="0" value={sgstPct} onChange={setSgstPct} /></div>
               </>
             ) : (
-              <div className="flex items-center justify-between text-sm"><span>IGST %</span><Input className="w-20 h-7 text-right" type="number" step="0.01" value={igstPct} onChange={(e) => setIgstPct(Number(e.target.value))} /></div>
+              <div className="flex items-center justify-between text-sm"><span>IGST %</span><NumberInput className="w-20 h-7 text-right" step="0.01" placeholder="0" value={igstPct} onChange={setIgstPct} /></div>
             )}
             <div className="border-t border-border my-2 pt-2 space-y-1 text-sm num">
               <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span className="font-medium">{fmtINR(totals.subtotal)}</span></div>
