@@ -91,6 +91,45 @@ export type Database = {
           },
         ]
       }
+      bills_given: {
+        Row: {
+          amount: number
+          bill_no: string
+          created_at: string
+          given_date: string
+          id: string
+          notes: string | null
+          party_id: string | null
+          party_name: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          bill_no?: string
+          created_at?: string
+          given_date?: string
+          id?: string
+          notes?: string | null
+          party_id?: string | null
+          party_name?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          bill_no?: string
+          created_at?: string
+          given_date?: string
+          id?: string
+          notes?: string | null
+          party_id?: string | null
+          party_name?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       challans: {
         Row: {
           billed: boolean
@@ -240,11 +279,55 @@ export type Database = {
         }
         Relationships: []
       }
+      payments_received: {
+        Row: {
+          amount: number
+          created_at: string
+          id: string
+          mode: string
+          notes: string | null
+          party_id: string | null
+          party_name: string
+          payment_date: string
+          reference: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount?: number
+          created_at?: string
+          id?: string
+          mode?: string
+          notes?: string | null
+          party_id?: string | null
+          party_name?: string
+          payment_date?: string
+          reference?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount?: number
+          created_at?: string
+          id?: string
+          mode?: string
+          notes?: string | null
+          party_id?: string | null
+          party_name?: string
+          payment_date?: string
+          reference?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       pricing_rules: {
         Row: {
           created_at: string
+          exact_weight: number | null
           id: string
           label: string | null
+          match_type: string
           max_weight: number
           min_weight: number
           rate_per_kg: number
@@ -252,8 +335,10 @@ export type Database = {
         }
         Insert: {
           created_at?: string
+          exact_weight?: number | null
           id?: string
           label?: string | null
+          match_type?: string
           max_weight: number
           min_weight: number
           rate_per_kg: number
@@ -261,8 +346,10 @@ export type Database = {
         }
         Update: {
           created_at?: string
+          exact_weight?: number | null
           id?: string
           label?: string | null
+          match_type?: string
           max_weight?: number
           min_weight?: number
           rate_per_kg?: number
