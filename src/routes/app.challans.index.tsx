@@ -63,7 +63,7 @@ function ChallansList() {
       <PageHeader
         title="Challans"
         subtitle="Delivery challans"
-        actions={<Link to="/app/challans/new"><Button className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" />New Challan</Button></Link>}
+        actions={<Link to="/app/challans/$id" params={{ id: "new" }}><Button className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" />New Challan</Button></Link>}
       />
       <div className="relative mb-4 max-w-sm">
         <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />
