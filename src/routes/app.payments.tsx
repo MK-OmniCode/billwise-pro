@@ -11,10 +11,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
-import { Plus, Trash2, FileDown, Pencil, Wallet, Receipt as ReceiptIcon } from "lucide-react";
+import { Plus, Trash2, FileDown, Pencil, Wallet, Receipt as ReceiptIcon, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { fmtINR, todayISO } from "@/lib/utils-bs";
-import { generatePaymentReceiptPDF, generateBillGivenPDF } from "@/lib/pdf";
+import { generatePaymentReceiptPDF, generateBillGivenPDF, generatePaymentsSummaryPDF, generateBillsGivenSummaryPDF } from "@/lib/pdf";
+import { NumberInput } from "@/components/NumberInput";
 
 export const Route = createFileRoute("/app/payments")({
   component: PaymentsPage,
