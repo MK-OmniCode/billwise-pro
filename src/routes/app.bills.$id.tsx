@@ -272,7 +272,7 @@ function BillForm() {
             <Textarea rows={3} value={notes} onChange={(e) => setNotes(e.target.value)} placeholder="Bank details, terms, thank you note…" />
           </CardContent>
         </Card>
-        <Card className="shadow-none bg-secondary/30">
+        <Card className="shadow-none bg-muted/40">
           <CardContent className="p-6 space-y-2">
             <div className="flex items-center justify-between mb-2">
               <Label className="cursor-pointer flex items-center gap-2">
@@ -288,15 +288,15 @@ function BillForm() {
             ) : (
               <div className="flex items-center justify-between text-sm"><span>IGST %</span><Input className="w-20 h-7 text-right" type="number" step="0.01" value={igstPct} onChange={(e) => setIgstPct(Number(e.target.value))} /></div>
             )}
-            <div className="border-t border-border my-2 pt-2 space-y-1 text-sm">
+            <div className="border-t border-border my-2 pt-2 space-y-1 text-sm num">
               <div className="flex justify-between"><span className="text-muted-foreground">Subtotal</span><span className="font-medium">{fmtINR(totals.subtotal)}</span></div>
               {!useIgst && <div className="flex justify-between"><span className="text-muted-foreground">CGST</span><span>{fmtINR(totals.cgst)}</span></div>}
               {!useIgst && <div className="flex justify-between"><span className="text-muted-foreground">SGST</span><span>{fmtINR(totals.sgst)}</span></div>}
               {useIgst && <div className="flex justify-between"><span className="text-muted-foreground">IGST</span><span>{fmtINR(totals.igst)}</span></div>}
             </div>
-            <div className="flex justify-between items-center bg-primary text-primary-foreground rounded-md px-3 py-2 mt-2">
-              <span className="font-bold">TOTAL</span>
-              <span className="font-bold text-lg">{fmtINR(totals.total)}</span>
+            <div className="flex justify-between items-center border-t-2 border-foreground pt-2 mt-2">
+              <span className="font-bold text-sm">TOTAL</span>
+              <span className="font-bold text-lg num">{fmtINR(totals.total)}</span>
             </div>
           </CardContent>
         </Card>

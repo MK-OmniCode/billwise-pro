@@ -90,7 +90,7 @@ function ChallansList() {
                   <td className="p-3 text-muted-foreground">{c.challan_date}</td>
                   <td className="p-3">{c.party_snapshot?.name || "—"}</td>
                   <td className="p-3 text-muted-foreground">{(c.items ?? []).length} item(s)</td>
-                  <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded-full ${c.billed ? "bg-success/15 text-success" : "bg-warning/20 text-warning-foreground"}`}>{c.billed ? "Billed" : "Pending"}</span></td>
+                  <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded border ${c.billed ? "border-foreground/30 bg-muted" : "border-warning/40 bg-warning/10"}`}>{c.billed ? "Billed" : "Pending"}</span></td>
                   <td className="p-3 text-right">
                     <Button size="icon" variant="ghost" onClick={() => downloadPdf(c)}><FileDown className="h-4 w-4" /></Button>
                     <Link to="/app/challans/$id" params={{ id: c.id }}><Button size="icon" variant="ghost"><Pencil className="h-4 w-4" /></Button></Link>

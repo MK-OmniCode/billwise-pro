@@ -175,29 +175,25 @@ function PaymentsPage() {
     <div className="p-6 md:p-8 max-w-7xl">
       <PageHeader title="Manage Payments" subtitle="Track money received and bills given" />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-        <Card className="shadow-none bg-gradient-to-br from-emerald-500/10 to-transparent">
-          <CardContent className="p-5 flex items-center justify-between">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
+        <Card className="shadow-none">
+          <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <div className="text-xs uppercase tracking-wider text-muted-foreground">Total Received</div>
-              <div className="text-2xl font-bold mt-1">{fmtINR(totalReceived)}</div>
+              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Total Received</div>
+              <div className="text-2xl font-bold mt-1 num">{fmtINR(totalReceived)}</div>
               <div className="text-xs text-muted-foreground mt-1">{payments.length} entries</div>
             </div>
-            <div className="h-12 w-12 rounded-full bg-emerald-500/15 flex items-center justify-center">
-              <Wallet className="h-6 w-6 text-emerald-600" />
-            </div>
+            <Wallet className="h-5 w-5 text-muted-foreground" />
           </CardContent>
         </Card>
-        <Card className="shadow-none bg-gradient-to-br from-primary/10 to-transparent">
-          <CardContent className="p-5 flex items-center justify-between">
+        <Card className="shadow-none">
+          <CardContent className="p-4 flex items-center justify-between">
             <div>
-              <div className="text-xs uppercase tracking-wider text-muted-foreground">Total Bills Given</div>
-              <div className="text-2xl font-bold mt-1">{fmtINR(totalGiven)}</div>
+              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Total Bills Given</div>
+              <div className="text-2xl font-bold mt-1 num">{fmtINR(totalGiven)}</div>
               <div className="text-xs text-muted-foreground mt-1">{billsGiven.length} entries</div>
             </div>
-            <div className="h-12 w-12 rounded-full bg-primary/15 flex items-center justify-center">
-              <ReceiptIcon className="h-6 w-6 text-primary" />
-            </div>
+            <ReceiptIcon className="h-5 w-5 text-muted-foreground" />
           </CardContent>
         </Card>
       </div>

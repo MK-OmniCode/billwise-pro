@@ -137,7 +137,7 @@ function SettingsPage() {
       <Card className="mb-6 shadow-none">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-4">
-            <h2 className="font-display text-xl font-bold">Company Information</h2>
+            <h2 className="text-base font-semibold">Company Information</h2>
             <Button onClick={saveSettings} disabled={saving}><Save className="h-4 w-4 mr-2" />{saving ? "Saving…" : "Save"}</Button>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -172,7 +172,7 @@ function SettingsPage() {
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-2">
             <div>
-              <h2 className="font-display text-xl font-bold">Weight-Based Pricing Rules</h2>
+              <h2 className="text-base font-semibold">Weight-Based Pricing Rules</h2>
               <p className="text-sm text-muted-foreground">Auto-pick rate per kg based on item weight. Bills use the first matching range.</p>
             </div>
             <div className="flex gap-2">

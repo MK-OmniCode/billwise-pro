@@ -96,8 +96,8 @@ function BillsList() {
                   <td className="p-3 font-medium">{b.bill_no}</td>
                   <td className="p-3 text-muted-foreground">{b.bill_date}</td>
                   <td className="p-3">{b.party_snapshot?.name || "—"}</td>
-                  <td className="p-3 text-right font-bold text-primary">{fmtINR(Number(b.total))}</td>
-                  <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded-full ${b.status === "paid" ? "bg-success/15 text-success" : "bg-warning/20 text-warning-foreground"}`}>{b.status}</span></td>
+                  <td className="p-3 text-right font-semibold num">{fmtINR(Number(b.total))}</td>
+                  <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded border ${b.status === "paid" ? "border-foreground/30 bg-muted" : "border-warning/40 bg-warning/10"}`}>{b.status}</span></td>
                   <td className="p-3 text-right">
                     <Button size="icon" variant="ghost" onClick={() => downloadPdf(b)}><FileDown className="h-4 w-4" /></Button>
                     <Link to="/app/bills/$id" params={{ id: b.id }}><Button size="icon" variant="ghost"><Pencil className="h-4 w-4" /></Button></Link>
