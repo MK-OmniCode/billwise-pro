@@ -153,7 +153,7 @@ function ChallanForm() {
               <div key={i} className="grid grid-cols-12 gap-2 items-center bg-muted/20 p-2 rounded-md">
                 <div className="col-span-1 text-sm text-center font-medium">{i + 1}</div>
                 <Input className="col-span-5" value={it.description} onChange={(e) => updItem(i, { description: e.target.value })} placeholder="Item description" />
-                <Input className="col-span-2" value={it.quantity} onChange={(e) => updItem(i, { quantity: e.target.value })} placeholder="e.g. 5 pcs" />
+                <Input className="col-span-2" value={it.quantity} onChange={(e) => updItem(i, { quantity: e.target.value })} placeholder="e.g. 5 kg" />
                 <Input className="col-span-3" value={it.remark} onChange={(e) => updItem(i, { remark: e.target.value })} placeholder="Optional" />
                 <Button size="icon" variant="ghost" className="col-span-1" onClick={() => delItem(i)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
               </div>

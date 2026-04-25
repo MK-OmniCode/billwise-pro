@@ -1,5 +1,5 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, FileText, Receipt, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, FileText, Receipt, Settings, LogOut, Wallet } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import logo from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
@@ -9,8 +9,9 @@ const nav = [
   { to: "/app/parties", label: "Parties", icon: Users },
   { to: "/app/challans", label: "Challans", icon: FileText },
   { to: "/app/bills", label: "Bills", icon: Receipt },
+  { to: "/app/payments", label: "Manage Payments", icon: Wallet },
   { to: "/app/settings", label: "Settings", icon: Settings },
-];
+] as const;
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   const { signOut, user } = useAuth();
