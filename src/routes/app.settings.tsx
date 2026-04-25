@@ -161,9 +161,9 @@ function SettingsPage() {
               <Label className="cursor-pointer">Use IGST (inter-state) instead of CGST + SGST</Label>
             </div>
             <div className="grid grid-cols-3 gap-4">
-              <div><Label>CGST %</Label><Input type="number" step="0.01" value={s.cgst_percent} onChange={(e) => setS({ ...s, cgst_percent: Number(e.target.value) })} disabled={s.use_igst} /></div>
-              <div><Label>SGST %</Label><Input type="number" step="0.01" value={s.sgst_percent} onChange={(e) => setS({ ...s, sgst_percent: Number(e.target.value) })} disabled={s.use_igst} /></div>
-              <div><Label>IGST %</Label><Input type="number" step="0.01" value={s.igst_percent} onChange={(e) => setS({ ...s, igst_percent: Number(e.target.value) })} disabled={!s.use_igst} /></div>
+              <div><Label>CGST %</Label><NumberInput step="0.01" placeholder="0" value={s.cgst_percent} onChange={(n) => setS({ ...s, cgst_percent: n })} disabled={s.use_igst} /></div>
+              <div><Label>SGST %</Label><NumberInput step="0.01" placeholder="0" value={s.sgst_percent} onChange={(n) => setS({ ...s, sgst_percent: n })} disabled={s.use_igst} /></div>
+              <div><Label>IGST %</Label><NumberInput step="0.01" placeholder="0" value={s.igst_percent} onChange={(n) => setS({ ...s, igst_percent: n })} disabled={!s.use_igst} /></div>
             </div>
           </div>
         </CardContent>
