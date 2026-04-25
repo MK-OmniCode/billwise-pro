@@ -201,23 +201,33 @@ function PaymentsPage() {
 
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-6">
         <Card className="shadow-none">
-          <CardContent className="p-4 flex items-center justify-between">
-            <div>
-              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Total Received</div>
-              <div className="text-2xl font-bold mt-1 num">{fmtINR(totalReceived)}</div>
-              <div className="text-xs text-muted-foreground mt-1">{payments.length} entries</div>
+          <CardContent className="p-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Total Received</div>
+                <div className="text-2xl font-bold mt-1 num">{fmtINR(totalReceived)}</div>
+                <div className="text-xs text-muted-foreground mt-1">{payments.length} entries</div>
+              </div>
+              <Wallet className="h-5 w-5 text-muted-foreground" />
             </div>
-            <Wallet className="h-5 w-5 text-muted-foreground" />
+            <Button size="sm" variant="outline" className="mt-3 w-full" onClick={exportPaymentsSummary}>
+              <FileText className="h-4 w-4 mr-2" />Download Summary PDF
+            </Button>
           </CardContent>
         </Card>
         <Card className="shadow-none">
-          <CardContent className="p-4 flex items-center justify-between">
-            <div>
-              <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Total Bills Given</div>
-              <div className="text-2xl font-bold mt-1 num">{fmtINR(totalGiven)}</div>
-              <div className="text-xs text-muted-foreground mt-1">{billsGiven.length} entries</div>
+          <CardContent className="p-4">
+            <div className="flex items-start justify-between">
+              <div>
+                <div className="text-[11px] uppercase tracking-wider text-muted-foreground">Total Bills Given</div>
+                <div className="text-2xl font-bold mt-1 num">{fmtINR(totalGiven)}</div>
+                <div className="text-xs text-muted-foreground mt-1">{billsGiven.length} entries</div>
+              </div>
+              <ReceiptIcon className="h-5 w-5 text-muted-foreground" />
             </div>
-            <ReceiptIcon className="h-5 w-5 text-muted-foreground" />
+            <Button size="sm" variant="outline" className="mt-3 w-full" onClick={exportBillsGivenSummary}>
+              <FileText className="h-4 w-4 mr-2" />Download Summary PDF
+            </Button>
           </CardContent>
         </Card>
       </div>
@@ -227,6 +237,7 @@ function PaymentsPage() {
           <TabsTrigger value="received">Payments Received</TabsTrigger>
           <TabsTrigger value="given">Bills Given</TabsTrigger>
         </TabsList>
+
 
         {/* PAYMENTS RECEIVED */}
         <TabsContent value="received" className="mt-4">
