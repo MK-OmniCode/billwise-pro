@@ -54,21 +54,33 @@ function inWords(n: number): string {
 
 export type PricingRule = {
   id: string;
+  match_type?: "between" | "equals" | null;
+  exact_weight?: number | null;
   min_weight: number;
   max_weight: number;
   rate_per_kg: number;
   label?: string | null;
 };
 
+const EPS = 0.0001;
+
 export function rateForWeight(weight: number, rules: PricingRule[]): number {
   if (!rules || rules.length === 0) return 0;
-  // Inclusive range: min <= w <= max. First match wins (sorted by min asc).
-  const sorted = [...rules].sort((a, b) => a.min_weight - b.min_weight);
-  for (const r of sorted) {
-    if (weight >= r.min_weight && weight <= r.max_weight) return r.rate_per_kg;
+  const w = Number(weight) || 0;
+  // Equals rules win first (more specific)
+  for (const r of rules) {
+    if ((r.match_type ?? "between") === "equals" && r.exact_weight != null) {
+      if (Math.abs(w - Number(r.exact_weight)) < EPS) return Number(r.rate_per_kg);
+    }
   }
-  // fallback to last bracket if above all
-  return sorted[sorted.length - 1].rate_per_kg;
+  // Then between rules, smallest range first (more specific match)
+  const between = rules
+    .filter((r) => (r.match_type ?? "between") === "between")
+    .sort((a, b) => (a.max_weight - a.min_weight) - (b.max_weight - b.min_weight));
+  for (const r of between) {
+    if (w + EPS >= r.min_weight && w - EPS <= r.max_weight) return Number(r.rate_per_kg);
+  }
+  return 0;
 }
 
 export function nextDocNo(prefix: string, lastNo: string | null): string {

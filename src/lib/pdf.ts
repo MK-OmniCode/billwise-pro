@@ -254,3 +254,99 @@ export async function generateBillPDF(opts: {
   footer(doc, opts.company.signature_label || "For " + opts.company.company_name);
   doc.save(`Bill-${opts.billNo}.pdf`);
 }
+
+// ============== PAYMENT RECEIPT ==============
+export async function generatePaymentReceiptPDF(opts: {
+  company: CompanyInfo;
+  date: string;
+  partyName: string;
+  amount: number;
+  mode: string;
+  reference?: string;
+  notes?: string;
+}) {
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  await header(doc, opts.company, "RECEIPT");
+  metaRow(doc, "Date:", opts.date, "Mode:", (opts.mode || "").toUpperCase(), 50);
+
+  doc.setFillColor(248, 246, 240);
+  doc.roundedRect(14, 56, 182, 24, 2, 2, "F");
+  doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(...NAVY);
+  doc.text("RECEIVED FROM", 18, 61);
+  doc.setFontSize(13); doc.setTextColor(20, 25, 50);
+  doc.text(opts.partyName || "—", 18, 70);
+  if (opts.reference) {
+    doc.setFont("helvetica", "normal"); doc.setFontSize(9); doc.setTextColor(...MUTED);
+    doc.text(`Ref: ${opts.reference}`, 18, 76);
+  }
+
+  // Amount block
+  doc.setFillColor(...NAVY);
+  doc.rect(14, 92, 182, 16, "F");
+  doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(255, 255, 255);
+  doc.text("AMOUNT RECEIVED", 18, 102);
+  doc.setFontSize(16);
+  doc.text(fmtINR(opts.amount), 192, 103, { align: "right" });
+
+  doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(...NAVY);
+  doc.text("Amount in Words:", 14, 120);
+  doc.setFont("helvetica", "italic"); doc.setTextColor(40, 40, 60);
+  const words = doc.splitTextToSize(amountInWords(opts.amount), 180);
+  doc.text(words, 14, 125);
+
+  if (opts.notes) {
+    const ny = 125 + words.length * 4 + 6;
+    doc.setFont("helvetica", "bold"); doc.setTextColor(...NAVY);
+    doc.text("Notes:", 14, ny);
+    doc.setFont("helvetica", "normal"); doc.setTextColor(50, 50, 70);
+    doc.text(doc.splitTextToSize(opts.notes, 180), 30, ny);
+  }
+
+  footer(doc, opts.company.signature_label || "For " + opts.company.company_name);
+  doc.save(`Receipt-${opts.partyName.replace(/\s+/g, "_")}-${opts.date}.pdf`);
+}
+
+// ============== BILL GIVEN (manual) ==============
+export async function generateBillGivenPDF(opts: {
+  company: CompanyInfo;
+  date: string;
+  billNo: string;
+  partyName: string;
+  amount: number;
+  notes?: string;
+}) {
+  const doc = new jsPDF({ unit: "mm", format: "a4" });
+  await header(doc, opts.company, "BILL GIVEN");
+  metaRow(doc, "Bill No:", opts.billNo, "Date:", opts.date, 50);
+
+  doc.setFillColor(248, 246, 240);
+  doc.roundedRect(14, 56, 182, 18, 2, 2, "F");
+  doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(...NAVY);
+  doc.text("PARTY", 18, 61);
+  doc.setFontSize(12); doc.setTextColor(20, 25, 50);
+  doc.text(opts.partyName || "—", 18, 70);
+
+  doc.setFillColor(...NAVY);
+  doc.rect(14, 86, 182, 16, "F");
+  doc.setFont("helvetica", "bold"); doc.setFontSize(11); doc.setTextColor(255, 255, 255);
+  doc.text("BILL AMOUNT", 18, 96);
+  doc.setFontSize(16);
+  doc.text(fmtINR(opts.amount), 192, 97, { align: "right" });
+
+  doc.setFont("helvetica", "bold"); doc.setFontSize(9); doc.setTextColor(...NAVY);
+  doc.text("Amount in Words:", 14, 114);
+  doc.setFont("helvetica", "italic"); doc.setTextColor(40, 40, 60);
+  const words = doc.splitTextToSize(amountInWords(opts.amount), 180);
+  doc.text(words, 14, 119);
+
+  if (opts.notes) {
+    const ny = 119 + words.length * 4 + 6;
+    doc.setFont("helvetica", "bold"); doc.setTextColor(...NAVY);
+    doc.text("Notes:", 14, ny);
+    doc.setFont("helvetica", "normal"); doc.setTextColor(50, 50, 70);
+    doc.text(doc.splitTextToSize(opts.notes, 180), 30, ny);
+  }
+
+  footer(doc, opts.company.signature_label || "For " + opts.company.company_name);
+  doc.save(`BillGiven-${opts.billNo || opts.partyName}-${opts.date}.pdf`);
+}

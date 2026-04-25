@@ -70,7 +70,7 @@ function BillsList() {
       <PageHeader
         title="Bills"
         subtitle="Tax invoices"
-        actions={<Link to="/app/bills/new"><Button className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" />New Bill</Button></Link>}
+        actions={<Link to="/app/bills/$id" params={{ id: "new" }}><Button className="bg-primary hover:bg-primary/90"><Plus className="h-4 w-4 mr-2" />New Bill</Button></Link>}
       />
       <div className="relative mb-4 max-w-sm">
         <Search className="absolute left-3 top-2.5 h-4 w-4 text-muted-foreground" />

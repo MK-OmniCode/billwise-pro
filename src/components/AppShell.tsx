@@ -1,14 +1,16 @@
 import { Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { LayoutDashboard, Users, FileText, Receipt, Settings, LogOut } from "lucide-react";
+import { LayoutDashboard, Users, FileText, Receipt, Settings, LogOut, Wallet } from "lucide-react";
 import { useAuth } from "@/lib/auth";
 import logo from "@/assets/logo.png";
 import { Button } from "@/components/ui/button";
 
-const nav = [
+type NavItem = { to: string; label: string; icon: typeof LayoutDashboard; exact?: boolean };
+const nav: NavItem[] = [
   { to: "/app", label: "Dashboard", icon: LayoutDashboard, exact: true },
   { to: "/app/parties", label: "Parties", icon: Users },
   { to: "/app/challans", label: "Challans", icon: FileText },
   { to: "/app/bills", label: "Bills", icon: Receipt },
+  { to: "/app/payments", label: "Manage Payments", icon: Wallet },
   { to: "/app/settings", label: "Settings", icon: Settings },
 ];
 
@@ -37,7 +39,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             return (
               <Link
                 key={n.to}
-                to={n.to}
+                to={n.to as never}
                 className={`flex items-center gap-3 px-3 py-2.5 rounded-md text-sm transition-colors ${
                   active
                     ? "bg-sidebar-primary text-sidebar-primary-foreground font-semibold shadow-sm"
