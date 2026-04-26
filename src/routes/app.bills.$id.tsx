@@ -188,7 +188,7 @@ function BillForm() {
     await save();
     const p = buildPayload();
     await generateBillPDF({
-      company: settings ?? { company_name: "BS Dyeing" },
+      company: (settings ?? { company_name: "BS Dyeing" }) as Parameters<typeof generateBillPDF>[0]["company"],
       billNo: p.bill_no, date: p.bill_date, party: p.party_snapshot, items: p.items,
       subtotal: p.subtotal,
       cgst_percent: p.cgst_percent, sgst_percent: p.sgst_percent, igst_percent: p.igst_percent,
