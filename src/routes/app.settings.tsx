@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { invalidateCompanySettings } from "@/lib/company-cache";
 import { useAuth } from "@/lib/auth";
 import { PageHeader } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
@@ -84,6 +85,7 @@ function SettingsPage() {
     const { error } = await supabase.from("company_settings").upsert(payload, { onConflict: "user_id" });
     setSaving(false);
     if (error) return toast.error(error.message);
+    invalidateCompanySettings();
     toast.success("Settings saved");
     load();
   };

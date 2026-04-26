@@ -12,7 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus, Trash2, Save, FileDown } from "lucide-react";
 import { toast } from "sonner";
 import { nextDocNo, todayISO } from "@/lib/utils-bs";
-import { generateChallanPDF } from "@/lib/pdf";
+import { generateChallanPDF } from "@/lib/pdf-lazy";
+import { getCompanySettings } from "@/lib/company-cache";
 
 export const Route = createFileRoute("/app/challans/$id")({
   component: ChallanForm,
@@ -38,15 +39,20 @@ function ChallanForm() {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const { data: p } = await supabase.from("parties").select("id,name,gstin,address,phone,state").order("name");
-      setParties((p ?? []) as Party[]);
-
       if (isNew) {
-        const { data: cs } = await supabase.from("company_settings").select("challan_prefix").maybeSingle();
-        const { data: last } = await supabase.from("challans").select("challan_no").order("created_at", { ascending: false }).limit(1).maybeSingle();
+        const [{ data: p }, { data: cs }, { data: last }] = await Promise.all([
+          supabase.from("parties").select("id,name,gstin,address,phone,state").order("name"),
+          supabase.from("company_settings").select("challan_prefix").maybeSingle(),
+          supabase.from("challans").select("challan_no").order("created_at", { ascending: false }).limit(1).maybeSingle(),
+        ]);
+        setParties((p ?? []) as Party[]);
         setChallanNo(nextDocNo(cs?.challan_prefix || "CH", last?.challan_no ?? null));
       } else {
-        const { data: c } = await supabase.from("challans").select("*").eq("id", id).maybeSingle();
+        const [{ data: p }, { data: c }] = await Promise.all([
+          supabase.from("parties").select("id,name,gstin,address,phone,state").order("name"),
+          supabase.from("challans").select("*").eq("id", id).maybeSingle(),
+        ]);
+        setParties((p ?? []) as Party[]);
         if (c) {
           setChallanNo(c.challan_no);
           setDate(c.challan_date);
@@ -98,10 +104,10 @@ function ChallanForm() {
 
   const saveAndPdf = async () => {
     await save();
-    const { data: cs } = await supabase.from("company_settings").select("*").maybeSingle();
+    const cs = await getCompanySettings();
     const p = buildPayload();
     await generateChallanPDF({
-      company: cs ?? { company_name: "BS Dyeing" },
+      company: (cs ?? { company_name: "BS Dyeing" }) as Parameters<typeof generateChallanPDF>[0]["company"],
       challanNo: p.challan_no, date: p.challan_date, party: p.party_snapshot, items: p.items, remark: p.remark,
     });
   };

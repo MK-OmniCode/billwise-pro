@@ -8,7 +8,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Plus, Search, FileDown, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { generateChallanPDF } from "@/lib/pdf";
+import { generateChallanPDF, preloadPdf } from "@/lib/pdf-lazy";
+import { getCompanySettings } from "@/lib/company-cache";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/app/challans/")({
   component: ChallansList,
@@ -26,7 +28,7 @@ type Challan = {
 
 function ChallansList() {
   const { user } = useAuth();
-  const [list, setList] = useState<Challan[]>([]);
+  const [list, setList] = useState<Challan[] | null>(null);
   const [q, setQ] = useState("");
 
   const load = async () => {
@@ -43,9 +45,9 @@ function ChallansList() {
   };
 
   const downloadPdf = async (c: Challan) => {
-    const { data: cs } = await supabase.from("company_settings").select("*").maybeSingle();
+    const cs = await getCompanySettings();
     await generateChallanPDF({
-      company: cs ?? { company_name: "BS Dyeing" },
+      company: (cs ?? { company_name: "BS Dyeing" }) as Parameters<typeof generateChallanPDF>[0]["company"],
       challanNo: c.challan_no,
       date: c.challan_date,
       party: c.party_snapshot ?? {},
@@ -54,7 +56,7 @@ function ChallansList() {
     });
   };
 
-  const filtered = list.filter((c) =>
+  const filtered = (list ?? []).filter((c) =>
     [c.challan_no, c.party_snapshot?.name].filter(Boolean).join(" ").toLowerCase().includes(q.toLowerCase())
   );
 
@@ -83,8 +85,13 @@ function ChallansList() {
               </tr>
             </thead>
             <tbody>
-              {filtered.length === 0 && <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">No challans yet.</td></tr>}
-              {filtered.map((c) => (
+              {list === null && Array.from({ length: 4 }).map((_, i) => (
+                <tr key={`s${i}`} className="border-b border-border last:border-0">
+                  <td className="p-3" colSpan={6}><Skeleton className="h-4 w-full" /></td>
+                </tr>
+              ))}
+              {list !== null && filtered.length === 0 && <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">No challans yet.</td></tr>}
+              {list !== null && filtered.map((c) => (
                 <tr key={c.id} className="border-b border-border last:border-0 hover:bg-muted/30">
                   <td className="p-3 font-medium">{c.challan_no}</td>
                   <td className="p-3 text-muted-foreground">{c.challan_date}</td>
@@ -92,7 +99,7 @@ function ChallansList() {
                   <td className="p-3 text-muted-foreground">{(c.items ?? []).length} item(s)</td>
                   <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded border ${c.billed ? "border-foreground/30 bg-muted" : "border-warning/40 bg-warning/10"}`}>{c.billed ? "Billed" : "Pending"}</span></td>
                   <td className="p-3 text-right">
-                    <Button size="icon" variant="ghost" onClick={() => downloadPdf(c)}><FileDown className="h-4 w-4" /></Button>
+                    <Button size="icon" variant="ghost" onMouseEnter={preloadPdf} onClick={() => downloadPdf(c)}><FileDown className="h-4 w-4" /></Button>
                     <Link to="/app/challans/$id" params={{ id: c.id }}><Button size="icon" variant="ghost"><Pencil className="h-4 w-4" /></Button></Link>
                     <Button size="icon" variant="ghost" onClick={() => remove(c.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                   </td>
