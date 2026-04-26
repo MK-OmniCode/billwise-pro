@@ -104,10 +104,10 @@ function ChallanForm() {
 
   const saveAndPdf = async () => {
     await save();
-    const { data: cs } = await supabase.from("company_settings").select("*").maybeSingle();
+    const cs = await getCompanySettings();
     const p = buildPayload();
     await generateChallanPDF({
-      company: cs ?? { company_name: "BS Dyeing" },
+      company: (cs ?? { company_name: "BS Dyeing" }) as Parameters<typeof generateChallanPDF>[0]["company"],
       challanNo: p.challan_no, date: p.challan_date, party: p.party_snapshot, items: p.items, remark: p.remark,
     });
   };
