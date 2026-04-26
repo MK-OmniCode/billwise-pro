@@ -8,7 +8,9 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Plus, Search, FileDown, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
-import { generateChallanPDF } from "@/lib/pdf";
+import { generateChallanPDF, preloadPdf } from "@/lib/pdf-lazy";
+import { getCompanySettings } from "@/lib/company-cache";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/app/challans/")({
   component: ChallansList,
