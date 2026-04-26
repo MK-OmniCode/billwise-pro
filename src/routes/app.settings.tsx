@@ -84,6 +84,7 @@ function SettingsPage() {
     const { error } = await supabase.from("company_settings").upsert(payload, { onConflict: "user_id" });
     setSaving(false);
     if (error) return toast.error(error.message);
+    invalidateCompanySettings();
     toast.success("Settings saved");
     load();
   };
