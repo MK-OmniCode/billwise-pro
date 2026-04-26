@@ -60,7 +60,7 @@ function BillsList() {
     ]);
     const row = (full ?? b) as Bill;
     await generateBillPDF({
-      company: cs ?? { company_name: "BS Dyeing" },
+      company: (cs ?? { company_name: "BS Dyeing" }) as Parameters<typeof generateBillPDF>[0]["company"],
       billNo: row.bill_no, date: row.bill_date,
       party: row.party_snapshot ?? {},
       items: row.items ?? [],
