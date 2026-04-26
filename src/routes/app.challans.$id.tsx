@@ -12,7 +12,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Plus, Trash2, Save, FileDown } from "lucide-react";
 import { toast } from "sonner";
 import { nextDocNo, todayISO } from "@/lib/utils-bs";
-import { generateChallanPDF } from "@/lib/pdf";
+import { generateChallanPDF } from "@/lib/pdf-lazy";
+import { getCompanySettings } from "@/lib/company-cache";
 
 export const Route = createFileRoute("/app/challans/$id")({
   component: ChallanForm,
