@@ -71,7 +71,7 @@ function BillsList() {
     });
   };
 
-  const filtered = list.filter((b) =>
+  const filtered = (list ?? []).filter((b) =>
     [b.bill_no, b.party_snapshot?.name].filter(Boolean).join(" ").toLowerCase().includes(q.toLowerCase())
   );
 
