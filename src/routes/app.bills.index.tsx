@@ -9,7 +9,9 @@ import { Input } from "@/components/ui/input";
 import { Plus, Search, FileDown, Pencil, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { fmtINR } from "@/lib/utils-bs";
-import { generateBillPDF } from "@/lib/pdf";
+import { generateBillPDF, preloadPdf } from "@/lib/pdf-lazy";
+import { getCompanySettings } from "@/lib/company-cache";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const Route = createFileRoute("/app/bills/")({
   component: BillsList,
