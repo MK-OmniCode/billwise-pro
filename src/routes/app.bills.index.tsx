@@ -100,8 +100,13 @@ function BillsList() {
               </tr>
             </thead>
             <tbody>
-              {filtered.length === 0 && <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">No bills yet.</td></tr>}
-              {filtered.map((b) => (
+              {list === null && Array.from({ length: 4 }).map((_, i) => (
+                <tr key={`s${i}`} className="border-b border-border last:border-0">
+                  <td className="p-3" colSpan={6}><Skeleton className="h-4 w-full" /></td>
+                </tr>
+              ))}
+              {list !== null && filtered.length === 0 && <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">No bills yet.</td></tr>}
+              {list !== null && filtered.map((b) => (
                 <tr key={b.id} className="border-b border-border last:border-0 hover:bg-muted/30">
                   <td className="p-3 font-medium">{b.bill_no}</td>
                   <td className="p-3 text-muted-foreground">{b.bill_date}</td>
@@ -109,7 +114,7 @@ function BillsList() {
                   <td className="p-3 text-right font-semibold num">{fmtINR(Number(b.total))}</td>
                   <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded border ${b.status === "paid" ? "border-foreground/30 bg-muted" : "border-warning/40 bg-warning/10"}`}>{b.status}</span></td>
                   <td className="p-3 text-right">
-                    <Button size="icon" variant="ghost" onClick={() => downloadPdf(b)}><FileDown className="h-4 w-4" /></Button>
+                    <Button size="icon" variant="ghost" onMouseEnter={preloadPdf} onClick={() => downloadPdf(b)}><FileDown className="h-4 w-4" /></Button>
                     <Link to="/app/bills/$id" params={{ id: b.id }}><Button size="icon" variant="ghost"><Pencil className="h-4 w-4" /></Button></Link>
                     <Button size="icon" variant="ghost" onClick={() => remove(b.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                   </td>
