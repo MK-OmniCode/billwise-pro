@@ -15,7 +15,6 @@ import { Plus, Trash2, Save, FileDown, ListPlus } from "lucide-react";
 import { toast } from "sonner";
 import { fmtINR, nextDocNo, rateForWeight, todayISO, type PricingRule } from "@/lib/utils-bs";
 import { generateBillPDF } from "@/lib/pdf-lazy";
-import { getCompanySettings } from "@/lib/company-cache";
 import { NumberInput } from "@/components/NumberInput";
 
 export const Route = createFileRoute("/app/bills/$id")({
