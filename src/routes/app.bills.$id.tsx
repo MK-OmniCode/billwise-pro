@@ -56,10 +56,14 @@ function BillForm() {
   useEffect(() => {
     if (!user) return;
     (async () => {
-      const [{ data: p }, { data: r }, { data: cs }] = await Promise.all([
+      const lastOrEdit = isNew
+        ? supabase.from("bills").select("bill_no").order("created_at", { ascending: false }).limit(1).maybeSingle()
+        : supabase.from("bills").select("*").eq("id", id).maybeSingle();
+      const [{ data: p }, { data: r }, { data: cs }, edit] = await Promise.all([
         supabase.from("parties").select("id,name,gstin,address,phone,state").order("name"),
         supabase.from("pricing_rules").select("*").order("min_weight"),
         supabase.from("company_settings").select("*").maybeSingle(),
+        lastOrEdit,
       ]);
       setParties((p ?? []) as Party[]);
       setRules((r ?? []) as PricingRule[]);
@@ -67,18 +71,18 @@ function BillForm() {
       setSettings(s);
 
       if (isNew) {
-        const { data: last } = await supabase.from("bills").select("bill_no").order("created_at", { ascending: false }).limit(1).maybeSingle();
+        const last = (edit.data as { bill_no?: string } | null) ?? null;
         setBillNo(nextDocNo(s?.bill_prefix || "BILL", last?.bill_no ?? null));
         setUseIgst(!!s?.use_igst);
         setCgstPct(s?.use_igst ? 0 : Number(s?.cgst_percent ?? 0));
         setSgstPct(s?.use_igst ? 0 : Number(s?.sgst_percent ?? 0));
         setIgstPct(s?.use_igst ? Number(s?.igst_percent ?? 0) : 0);
       } else {
-        const { data: b } = await supabase.from("bills").select("*").eq("id", id).maybeSingle();
+        const b = edit.data as Record<string, unknown> | null;
         if (b) {
-          setBillNo(b.bill_no); setDate(b.bill_date); setPartyId(b.party_id ?? "");
+          setBillNo(b.bill_no as string); setDate(b.bill_date as string); setPartyId((b.party_id as string) ?? "");
           setItems((b.items as unknown as Item[]) ?? []);
-          setNotes(b.notes ?? ""); setStatus(b.status);
+          setNotes((b.notes as string) ?? ""); setStatus(b.status as string);
           setCgstPct(Number(b.cgst_percent)); setSgstPct(Number(b.sgst_percent)); setIgstPct(Number(b.igst_percent));
           setUseIgst(Number(b.igst_percent) > 0 && Number(b.cgst_percent) === 0);
           setChallanIds((b.challan_ids as unknown as string[]) ?? []);
