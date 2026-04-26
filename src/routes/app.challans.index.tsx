@@ -85,8 +85,13 @@ function ChallansList() {
               </tr>
             </thead>
             <tbody>
-              {filtered.length === 0 && <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">No challans yet.</td></tr>}
-              {filtered.map((c) => (
+              {list === null && Array.from({ length: 4 }).map((_, i) => (
+                <tr key={`s${i}`} className="border-b border-border last:border-0">
+                  <td className="p-3" colSpan={6}><Skeleton className="h-4 w-full" /></td>
+                </tr>
+              ))}
+              {list !== null && filtered.length === 0 && <tr><td colSpan={6} className="p-8 text-center text-muted-foreground">No challans yet.</td></tr>}
+              {list !== null && filtered.map((c) => (
                 <tr key={c.id} className="border-b border-border last:border-0 hover:bg-muted/30">
                   <td className="p-3 font-medium">{c.challan_no}</td>
                   <td className="p-3 text-muted-foreground">{c.challan_date}</td>
@@ -94,7 +99,7 @@ function ChallansList() {
                   <td className="p-3 text-muted-foreground">{(c.items ?? []).length} item(s)</td>
                   <td className="p-3"><span className={`text-xs px-2 py-0.5 rounded border ${c.billed ? "border-foreground/30 bg-muted" : "border-warning/40 bg-warning/10"}`}>{c.billed ? "Billed" : "Pending"}</span></td>
                   <td className="p-3 text-right">
-                    <Button size="icon" variant="ghost" onClick={() => downloadPdf(c)}><FileDown className="h-4 w-4" /></Button>
+                    <Button size="icon" variant="ghost" onMouseEnter={preloadPdf} onClick={() => downloadPdf(c)}><FileDown className="h-4 w-4" /></Button>
                     <Link to="/app/challans/$id" params={{ id: c.id }}><Button size="icon" variant="ghost"><Pencil className="h-4 w-4" /></Button></Link>
                     <Button size="icon" variant="ghost" onClick={() => remove(c.id)}><Trash2 className="h-4 w-4 text-destructive" /></Button>
                   </td>
