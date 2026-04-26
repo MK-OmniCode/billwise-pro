@@ -33,11 +33,14 @@ type Bill = {
 
 function BillsList() {
   const { user } = useAuth();
-  const [list, setList] = useState<Bill[]>([]);
+  const [list, setList] = useState<Bill[] | null>(null);
   const [q, setQ] = useState("");
 
   const load = async () => {
-    const { data } = await supabase.from("bills").select("*").order("bill_date", { ascending: false });
+    const { data } = await supabase
+      .from("bills")
+      .select("id,bill_no,bill_date,party_snapshot,total,status")
+      .order("bill_date", { ascending: false });
     setList((data ?? []) as unknown as Bill[]);
   };
   useEffect(() => { if (user) load(); }, [user]);
@@ -50,16 +53,21 @@ function BillsList() {
   };
 
   const downloadPdf = async (b: Bill) => {
-    const { data: cs } = await supabase.from("company_settings").select("*").maybeSingle();
+    // Need full row for PDF (items + tax breakdown), but reuse cached company settings.
+    const [{ data: full }, cs] = await Promise.all([
+      supabase.from("bills").select("*").eq("id", b.id).maybeSingle(),
+      getCompanySettings(),
+    ]);
+    const row = (full ?? b) as Bill;
     await generateBillPDF({
       company: cs ?? { company_name: "BS Dyeing" },
-      billNo: b.bill_no, date: b.bill_date,
-      party: b.party_snapshot ?? {},
-      items: b.items ?? [],
-      subtotal: Number(b.subtotal),
-      cgst_percent: Number(b.cgst_percent), sgst_percent: Number(b.sgst_percent), igst_percent: Number(b.igst_percent),
-      cgst_amount: Number(b.cgst_amount), sgst_amount: Number(b.sgst_amount), igst_amount: Number(b.igst_amount),
-      total: Number(b.total), notes: b.notes ?? "",
+      billNo: row.bill_no, date: row.bill_date,
+      party: row.party_snapshot ?? {},
+      items: row.items ?? [],
+      subtotal: Number(row.subtotal),
+      cgst_percent: Number(row.cgst_percent), sgst_percent: Number(row.sgst_percent), igst_percent: Number(row.igst_percent),
+      cgst_amount: Number(row.cgst_amount), sgst_amount: Number(row.sgst_amount), igst_amount: Number(row.igst_amount),
+      total: Number(row.total), notes: row.notes ?? "",
     });
   };
 
