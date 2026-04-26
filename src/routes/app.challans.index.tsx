@@ -28,7 +28,7 @@ type Challan = {
 
 function ChallansList() {
   const { user } = useAuth();
-  const [list, setList] = useState<Challan[]>([]);
+  const [list, setList] = useState<Challan[] | null>(null);
   const [q, setQ] = useState("");
 
   const load = async () => {
@@ -45,9 +45,9 @@ function ChallansList() {
   };
 
   const downloadPdf = async (c: Challan) => {
-    const { data: cs } = await supabase.from("company_settings").select("*").maybeSingle();
+    const cs = await getCompanySettings();
     await generateChallanPDF({
-      company: cs ?? { company_name: "BS Dyeing" },
+      company: (cs ?? { company_name: "BS Dyeing" }) as Parameters<typeof generateChallanPDF>[0]["company"],
       challanNo: c.challan_no,
       date: c.challan_date,
       party: c.party_snapshot ?? {},
@@ -56,7 +56,7 @@ function ChallansList() {
     });
   };
 
-  const filtered = list.filter((c) =>
+  const filtered = (list ?? []).filter((c) =>
     [c.challan_no, c.party_snapshot?.name].filter(Boolean).join(" ").toLowerCase().includes(q.toLowerCase())
   );
 
