@@ -14,7 +14,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "
 import { Plus, Trash2, FileDown, Pencil, Wallet, Receipt as ReceiptIcon, FileText } from "lucide-react";
 import { toast } from "sonner";
 import { fmtINR, todayISO } from "@/lib/utils-bs";
-import { generatePaymentReceiptPDF, generateBillGivenPDF, generatePaymentsSummaryPDF, generateBillsGivenSummaryPDF } from "@/lib/pdf";
+import { generatePaymentReceiptPDF, generateBillGivenPDF, generatePaymentsSummaryPDF, generateBillsGivenSummaryPDF, preloadPdf } from "@/lib/pdf-lazy";
 import { NumberInput } from "@/components/NumberInput";
 
 export const Route = createFileRoute("/app/payments")({
