@@ -350,7 +350,7 @@ function PaymentsPage() {
         const matched = parties.find(p => p.name.toUpperCase() === partyName.toUpperCase());
         rows.push({
           user_id: user!.id, payment_date: date, party_name: partyName,
-          party_id: matched?.id ?? null, amount, mode: "cash", reference: "", notes: "Bulk imported",
+          party_id: matched?.id ?? null, amount, mode: "bank", reference: "", notes: "Bulk imported",
         });
       });
       if (rows.length === 0) {
