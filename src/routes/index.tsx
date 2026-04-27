@@ -18,8 +18,9 @@ function Index() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="text-center">
-        <div className="text-2xl font-bold tracking-tight">BS Dyeing</div>
-        <p className="text-sm text-muted-foreground mt-2">Loading…</p>
+        <div className="h-12 w-12 rounded-2xl gradient-brand mx-auto mb-4 animate-pulse shadow-brand" />
+        <div className="font-display text-2xl font-bold tracking-tight">BS Dyeing</div>
+        <p className="text-sm text-muted-foreground mt-2">Loading your workspace…</p>
       </div>
     </div>
   );
