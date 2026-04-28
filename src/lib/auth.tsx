@@ -28,6 +28,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(s);
       setUser(s?.user ?? null);
       setLoading(false);
+    }).catch((error) => {
+      console.error("Failed to get session:", error);
+      setLoading(false);
     });
     return () => subscription.unsubscribe();
   }, []);
