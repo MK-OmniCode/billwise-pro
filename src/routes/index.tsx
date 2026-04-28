@@ -15,6 +15,14 @@ function Index() {
     navigate({ to: user ? "/app" : "/login", replace: true });
   }, [user, loading, navigate]);
 
+  // Safety net: if auth takes too long, send to login so we never get stuck on this splash.
+  useEffect(() => {
+    const t = setTimeout(() => {
+      if (loading) navigate({ to: "/login", replace: true });
+    }, 4000);
+    return () => clearTimeout(t);
+  }, [loading, navigate]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-background">
       <div className="text-center">
