@@ -5,12 +5,16 @@ import tailwindcss from "@tailwindcss/vite";
 import tsConfigPaths from "vite-tsconfig-paths";
 import react from "@vitejs/plugin-react";
 
+// Netlify plugin only when building on Netlify (NETLIFY=true is set automatically there).
+// Lovable publish uses Cloudflare Workers and must NOT include the Netlify plugin.
+const isNetlify = process.env.NETLIFY === "true";
+
 export default defineConfig({
   plugins: [
     tsConfigPaths(),
     tailwindcss(),
     tanstackStart(),
-    netlify(),
+    ...(isNetlify ? [netlify()] : []),
     react(),
   ],
 });
