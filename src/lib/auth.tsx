@@ -4,7 +4,8 @@ const USERNAME = "admin";
 const PASSWORD = "admin";
 const STORAGE_KEY = "bs_local_auth";
 
-type LocalUser = { username: string };
+const LOCAL_USER_ID = "00000000-0000-0000-0000-000000000001";
+type LocalUser = { id: string; username: string; email: string };
 
 type AuthCtx = {
   user: LocalUser | null;
@@ -29,7 +30,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const signIn = async (username: string, password: string) => {
     if (username.trim().toLowerCase() === USERNAME && password === PASSWORD) {
-      const u = { username: USERNAME };
+      const u: LocalUser = { id: LOCAL_USER_ID, username: USERNAME, email: "admin@local" };
       localStorage.setItem(STORAGE_KEY, JSON.stringify(u));
       setUser(u);
       return { error: null };
